@@ -1,4 +1,4 @@
-Link back to home page https://bmripper.github.io/<https://bmripper.github.io/>
+Link back to home page https://bmripper.github.io/
 
 # Business Intelligence Portfolio
 
