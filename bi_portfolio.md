@@ -1,5 +1,3 @@
-Link back to home page https://bmripper.github.io/
-
 # Business Intelligence Portfolio
 
 The first project to discuss is my work in Artifical Intelligence (AI), specially Reinforcement Learning. I am attempting to create a control system 
