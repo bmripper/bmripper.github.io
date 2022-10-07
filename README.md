@@ -4,7 +4,7 @@
 This is a collection of my past, present, and future projects. Feel free to also check-out my LinkedIn profile: https://www.linkedin.com/in/brent-ripperger-2b995a98/
 
 ## Table of Contents
-- Resume (General Resume 2022 09.pdf)
+- Resume (bmripper.github.io/General Resume 2022 09.pdf)
 - Data Analytics Portfolio
 - Business Intelligence Portfolio
 - Data Visualizations Portfolio
