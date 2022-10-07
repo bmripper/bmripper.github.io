@@ -9,7 +9,7 @@ While the system is simple, it was an effective test to determine the feasibilit
 
 ### Environment
 
-|source|Variable            |Qty  |UoM       |
+|source|variable            |qty  |UoM       |
 |------|--------------------|-----|----------|
 |Solar |Cloud Coverage      |0.3  |% of area |
 |Solar |St.D Cloud Coverage |0.1  |% of area |
@@ -20,7 +20,7 @@ While the system is simple, it was an effective test to determine the feasibilit
 
 ### Rules
 
-|Variable        |Qty         |UoM   |
+|variable        |qty         |UoM   |
 |----------------|------------|------|
 |Goal            |50          |kWh   |
 |Reward Function |[0, 50, 100]|points|
