@@ -1,3 +1,5 @@
+https://github.com/bmripper/bmripper.github.io/blob/[]IMG_4347_square.jpg?raw=true
+![Alt text](https://bmripper.github.io/IMG_4347_square.jpg?raw=true "Title")
 <h1 align="center">Brent Ripperger</h1>
 <p align="center">Business Intelligence and Data Analytics | Carnegie Mellon University</p>
 <br>
