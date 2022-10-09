@@ -4,7 +4,7 @@ The project is my final output from a class in Geographic Information System (GI
 
 ### Allegheny County’s relationship between economic performance and social equity, and the influence of walkability
 
-[Project Link:](https://bmripper.github.io/Allegheny_PA_relationship_EP_SE_walk.pdf)
+Project Link:[link](https://bmripper.github.io/Allegheny_PA_relationship_EP_SE_walk.pdf)
 
 ### Abstract
 
