@@ -86,6 +86,7 @@ import itertools
 state_space = list(itertools.product([0, 1], repeat=24))
 len(state_space)
 ```
+
 ```ruby
 %%time
 
@@ -157,6 +158,7 @@ for i in reversed(indexes):
     
 print('number of valid states',len(state_space))
 ```
+
 finished (1,0,0,0,1)<br>
 finished (1,0,0,1)<br>
 finished (1,0,1)<br>
@@ -167,11 +169,13 @@ finished (0,1)<br>
 finished (1,0)<br>
 number of invalid states: 16768878<br>
 number of valid states 8338<br>
+
 ```ruby
 goal_mapping = []
 for i in state_space:
     goal_mapping.append(simulation(i))
 ```
+
 ```ruby
 %%time
 reward_matrix = []
@@ -190,12 +194,14 @@ for i in range(len(reward_matrix)):
     print('round '+str(i+1),'winner was:',np.argmax(reward_matrix[i]),\
           'with simulation:',state_space[np.argmax(reward_matrix[i])])
 ```
+
 (3, 8338)<br>
 average winner was: 7622 with simulation: (1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)<br>
 round 1 winner was: 7622 with simulation: (1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)<br>
 round 2 winner was: 6773 with simulation: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)<br>
 round 3 winner was: 6767 with simulation: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0)<br>
 Wall time: 1min 30s
+
 ```ruby
 node_counter = 0
 state_lookup = {}
@@ -235,7 +241,9 @@ for i in states:
             
 print(available_actions)
 ```
+
 [(0, 2), (2, 4), (4, 7), ..., (12232, 17923), (17923, 26260), (17923, 26261)]
+
 ```ruby
 points_list = available_actions
 # how many points in graph? x points
@@ -245,6 +253,7 @@ MATRIX_SIZE = node_counter + 1
 R = np.matrix(np.ones(shape=(MATRIX_SIZE, MATRIX_SIZE)))
 R *= -1
 ```
+
 ```ruby
 # assign zeros to paths and 100 to goal-reaching point
 reward = -1
@@ -270,6 +279,7 @@ for idx, term_node in enumerate(term_nodes):
     R[term_node,term_node]= sum(goal_mapping[idx])
 
 ```
+
 ```ruby
 from numba import jit
 
@@ -278,6 +288,7 @@ def go_fast_score(Q): # Function is compiled to machine code when called the fir
     go_fast_score = Q/np.max(Q)*100
     return go_fast_score
 ```
+
 ```ruby
 Q = np.matrix(np.zeros([MATRIX_SIZE,MATRIX_SIZE], dtype=int))
 
@@ -320,6 +331,7 @@ def update(current_state, action, gamma):
 
 update(initial_state, action, gamma)
 ```
+
 ```ruby
 %%time
 
@@ -337,6 +349,7 @@ for i in range(5000000):
     
 print("Trained Q matrix:")
 ```
+
 ```ruby
 # Testing
 current_state = node_counter
@@ -359,16 +372,19 @@ print(steps)
 plt.plot(scores)
 plt.show()
 ```
+
 Most efficient path:
 [26262, 1, 3, 6, 10, 16, 24, 36, 53, 79, 118, 176, 260, 382, 559, 817, 1195, 1751, 2569, 3772, 5536, 8120, 11902, 17438, 25546]
 
 <img src="https://bmripper.github.io/ai_rl_visual.PNG" width=40% height=40%>
+
 ```ruby
 for step in steps:
     for state in state_lookup:
         if state_lookup[state] == step:
             print(state)
 ```
+
 level1_(1,)<br>
 level2_(1, 1)<br>
 level3_(1, 1, 1)<br>
