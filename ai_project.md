@@ -6,6 +6,13 @@ a power plant with solar panels and a natural gas turbine. I created a [simulato
 
 While the system is simple, it was an effective test to determine the feasibility of the control system idea. 
 
+Great thanks to Mic (2016) for providing the majority of the code structure [Getting AI smarter with Q-learning: a simple first step in Python](http://firsttimeprogrammer.blogspot.com/2016/09/getting-ai-smarter-with-q-learning.html)
+
+|header         |value                                                                              |
+|---------------|-----------------------------------------------------------------------------------|
+|Author:        |Ripperger, Brent                                                                   |
+|Date Created:  |21 May 2022                                                                        |
+
 ### Environment
 
 |source|variable            |qty  |UoM       |
