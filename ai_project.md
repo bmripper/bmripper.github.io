@@ -361,10 +361,8 @@ plt.show()
 ```
 Most efficient path:
 [26262, 1, 3, 6, 10, 16, 24, 36, 53, 79, 118, 176, 260, 382, 559, 817, 1195, 1751, 2569, 3772, 5536, 8120, 11902, 17438, 25546]
-![](ai_rl_visual.PNG)
 
-<img src="https://user-images.githubusercontent.com/16319829/81180309-2b51f000-8fee-11ea-8a78-ddfe8c3412a7.png" width=50% height=50%>
-
+<img src="https://bmripper.github.io/ai_rl_visual.PNG" width=40% height=40%>
 ```
 for step in steps:
     for state in state_lookup:
