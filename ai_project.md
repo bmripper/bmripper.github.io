@@ -15,6 +15,8 @@ Great thanks to Mic (2016) for providing the majority of the code structure [Get
 
 ### Environment
 
+<img align="right" src="https://bmripper.github.io/ai_model.PNG" width=50% height=50% >
+
 |source|variable            |qty  |UoM       |
 |------|--------------------|-----|----------|
 |Solar |Cloud Coverage      |0.3  |% of area |
