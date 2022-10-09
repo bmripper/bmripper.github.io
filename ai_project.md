@@ -2,16 +2,19 @@
 
 The project demonstrates my work in Artifical Intelligence (AI), specially Reinforcement Learning. I am attempting to create a control system 
 for distributed energy resources (DERs) using AI. The project was my initial attempt at a simple model: learn the optimal operating procedue for
-a power plant with solar panels and a natural gas turbine. I created a [simulator in Excel](https://bmripper.github.io/Power_Plant_Simulator.xlsx) first, then recreated the simulator in Python. The script uses reinforcement learning to find the optimal path (operating procedure) for a 24 hour period. 
+a power plant with solar panels and a natural gas turbine. I created a [simulator in Excel](https://bmripper.github.io/Power_Plant_Simulator.xlsx) first, then recreated the simulator in Python. The script uses reinforcement learning to find the optimal path (operator action plan) for a 24 hour period. While the system is simple, it was an effective test to determine the feasibility of the control system idea. 
 
-While the system is simple, it was an effective test to determine the feasibility of the control system idea. 
-
-Great thanks to Mic (2016) for providing the majority of the code structure [Getting AI smarter with Q-learning: a simple first step in Python](http://firsttimeprogrammer.blogspot.com/2016/09/getting-ai-smarter-with-q-learning.html)
+Great thanks to Mic (2016) for providing the majority of the code structure [Getting AI smarter with Q-learning: a simple first step in Python](http://firsttimeprogrammer.blogspot.com/2016/09/getting-ai-smarter-with-q-learning.html)!
+<br><br>
 
 |header         |value                                                                              |
 |---------------|-----------------------------------------------------------------------------------|
 |Author:        |Ripperger, Brent                                                                   |
 |Date Created:  |21 May 2022                                                                        |
+
+<br>
+
+## Problem Setup
 
 ### Environment
 
@@ -35,9 +38,11 @@ Great thanks to Mic (2016) for providing the majority of the code structure [Get
 |Startup Time    |4           |hrs   |	
 |Shutdown Time   |2           |hrs   |
 
-**the reward is given at the end of each hour, for a 24 hour period. If the Goal (energy demand) was met and if zero emissions were produced, then the entire reward is given. If the Goal (energy demand) was met but emissions were produced, then half the reward is given. If the Goal (energy demand) was not met, no reward is given.*
+**the Reward is given at the end of each hour, for a 24 hour period. If the Goal (energy demand) was met and if zero emissions were produced, then the entire Reward is given. If the Goal (energy demand) was met but emissions were produced, then half the Reward is given. If the Goal (energy demand) was not met, no Reward is given.*<br>
 
-### Python program
+**the Startup Time variable refers to the amount of time until the natural gas turbine is generating Power, the Shutdown Time variable refers to the amount of time to slow down the turbine to zero Power*<br>
+
+## Problem Solution in Python
 ```ruby
 import numpy as np
 import pylab as plt
