@@ -12,3 +12,4 @@
 - [Data Analytics Project]
 - [AI Project](https://bmripper.github.io/ai_project.html)
 - [GIS Project](https://bmripper.github.io/gis_project.html)
+- [Data Visualization Project]
