@@ -1,11 +1,10 @@
 # Artificial Intelligence Project
 
-The first project to discuss is my work in Artifical Intelligence (AI), specially Reinforcement Learning. I am attempting to create a control system 
-for distributed energy resources (DERs) using AI. The first project was my initial attempt at a simple model: learn the optimal operating procedue for
-a given solar/natural gas turbine, given multiple parameters. I created a simulator in Excel, to confirm the simulation idea worked. Then, I created a
-Python script that will use reinforcement learning to find the optimal path. 
+The project discusses my work in Artifical Intelligence (AI), specially Reinforcement Learning. I am attempting to create a control system 
+for distributed energy resources (DERs) using AI. The project was my initial attempt at a simple model: learn the optimal operating procedue for
+a power plant with solar panels and a natural gas turbine. I created a [simulator in Excel]() first, then implemented the simulator in Python. The script uses reinforcement learning to find the optimal path (operating procedure) for a 24 hour period. 
 
-While the system is simple, it was an effective test to determine the feasibility of the idea. 
+While the system is simple, it was an effective test to determine the feasibility of the control system idea. 
 
 ### Environment
 
