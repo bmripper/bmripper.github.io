@@ -20,3 +20,10 @@ This project explored the relationship between economic performance (EP), social
 Image shows the kmeans cluster analysis results. The economic performance clusters are displayed below. The cluster used 10 variables: median household income, median sale price, variance sale price 2017 to 2019, % owner occupied homes, foreclosures, % poor condition homes, % homes with violations after inspection, new parcels created, vacancy rates, and subsidized homes. Figure 1 shows the cluster results by census tract.
 
 ![](Allegheny_economic_performance_kmeans.PNG)
+
+### Example Linear Regression: Predict Walkability with Economic Performance metric
+
+The image shows the linear regression results using economic performance metric to predict walkability by census tract. Referring to Figure 7, similar findings were found between W being negatively correlated with EP, p-value = <2e-16 and R-squared = 0.2515. The results indicate that the higher the economic performance, the lower the walkability.
+
+![](Allegheny_economic_performance_walkability_linear_regression.PNG)
+
