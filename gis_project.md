@@ -21,9 +21,9 @@ Image shows the kmeans cluster analysis results. The economic performance cluste
 
 ![](Allegheny_economic_performance_kmeans.PNG)
 
-### Example Linear Regression: Predict Walkability with Economic Performance metric
+### Example Linear Regression: Predict Economic Performance metric with Walkability score
 
-The image shows the linear regression results using economic performance metric to predict walkability by census tract. Referring to Figure 7, similar findings were found between W being negatively correlated with EP, p-value = <2e-16 and R-squared = 0.2515. The results indicate that the higher the economic performance, the lower the walkability.
+The image shows the linear regression results using walkability score to predict economic performance metric by census tract. Referring to Figure 7, similar findings were found between W being negatively correlated with EP, p-value = <2e-16 and R-squared = 0.2515. The results indicate that the higher the economic performance, the lower the walkability.
 
 ![](Allegheny_economic_performance_walkability_linear_regression.PNG)
 
