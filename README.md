@@ -9,5 +9,5 @@
 ## Table of Contents
 - [Resume](https://bmripper.github.io/General_Resume_2022_09.pdf)
 - [Data Analytics Project]
-- [AI Project](https://bmripper.github.io/ai_project)
-- [GIS Project](https://bmripper.github.io/Allegheny_PA_relationship_EP_SE_walk.pdf)
+- [AI Project](https://bmripper.github.io/ai_project.html)
+- [GIS Project](https://bmripper.github.io/gis_project.html)
