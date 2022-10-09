@@ -1,10 +1,14 @@
 # Geographic Information System Project
 
-The project is my final output from a class in Geographic Information System (GIS) where we learned to use [ArcGIS](https://www.arcgis.com/index.html). 
+The project is my final output from a class in Geographic Information System (GIS) where I learned to use [ArcGIS](https://www.arcgis.com/index.html).
+<br><br>
 
-### Allegheny County’s relationship between economic performance and social equity, and the influence of walkability
+|Category       |Value                                                                              |
+|---------------|-----------------------------------------------------------------------------------|
+|Article: |[Allegheny County’s relationship between economic performance and social equity, and the influence of walkability](https://bmripper.github.io/Allegheny_PA_relationship_EP_SE_walk.pdf)|
+|Author:        |Ripperger, Brent                                                                   |
+|Date Submitted:|30 April 2022                                                                      |
 
-Project: [Link](https://bmripper.github.io/Allegheny_PA_relationship_EP_SE_walk.pdf)
 
 ### Abstract
 
@@ -12,6 +16,6 @@ This project explored the relationship between economic performance (EP), social
 
 ### Economic Performance
 
-The section will start with describing the kmeans cluster analysis. The economic performance clusters are displayed below. The cluster used 10 variables: median household income, median sale price, variance sale price 2017 to 2019, % owner occupied homes, foreclosures, % poor condition homes, % homes with violations after inspection, new parcels created, vacancy rates, and subsidized homes. Figure 1 shows the cluster results by census tract.
+The image shows the kmeans cluster analysis results. The economic performance clusters are displayed below. The cluster used 10 variables: median household income, median sale price, variance sale price 2017 to 2019, % owner occupied homes, foreclosures, % poor condition homes, % homes with violations after inspection, new parcels created, vacancy rates, and subsidized homes. Figure 1 shows the cluster results by census tract.
 
 ![](Allegheny_economic_performance_kmeans.PNG)
