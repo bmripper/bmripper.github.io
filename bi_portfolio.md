@@ -1,4 +1,4 @@
-# Business Intelligence Portfolio
+# Artificial Intelligence Project
 
 The first project to discuss is my work in Artifical Intelligence (AI), specially Reinforcement Learning. I am attempting to create a control system 
 for distributed energy resources (DERs) using AI. The first project was my initial attempt at a simple model: learn the optimal operating procedue for
