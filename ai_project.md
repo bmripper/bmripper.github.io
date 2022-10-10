@@ -9,7 +9,7 @@ Big thanks to Mic (2016) for providing the majority of the code structure [Getti
 
 |header            |value                                                                              |
 |------------------|-----------------------------------------------------------------------------------|
-|Program:          |[Python](https://bmripper.github.io/RL_power_plant.html)                           |
+|Program:          |[Html file](https://bmripper.github.io/RL_power_plant.html)                           |
 |Author:           |Ripperger, Brent                                                                   |
 |Date Created:     |21 May 2022                                                                        |
 
