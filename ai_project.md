@@ -1,8 +1,8 @@
 # Artificial Intelligence Project
 
 The project demonstrates my work in Artifical Intelligence (AI), specially Reinforcement Learning. I am attempting to create a control system 
-for distributed energy resources (DERs) using AI. The project was my initial attempt at a simple model: learn the optimal operating procedue for
-a power plant with solar panels and a natural gas turbine. I created a [simulator in Excel](https://bmripper.github.io/Power_Plant_Simulator.xlsx) first, then recreated the simulator in Python. The script uses reinforcement learning to find the optimal path (operator action plan) for a 24 hour period. While the system is simple, it was an effective test to determine the feasibility of the control system idea. 
+for distributed energy resources (DERs) using AI. The project was my initial attempt at a simple model: learn the optimal operating action plan for
+a power plant with solar panels and a natural gas turbine (i.e., at which hours should I run the natural gas turbine). I created a [simulator in Excel](https://bmripper.github.io/Power_Plant_Simulator.xlsx) first, then recreated the simulator in Python. The script uses reinforcement learning to find the optimal path (operator action plan) for a 24 hour period. While the system is simple, it was an effective test to determine the feasibility of the control system idea. 
 
 Big thanks to Mic (2016) for providing the majority of the code structure [Getting AI smarter with Q-learning: a simple first step in Python](http://firsttimeprogrammer.blogspot.com/2016/09/getting-ai-smarter-with-q-learning.html)!
 <br><br>
