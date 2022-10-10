@@ -43,13 +43,13 @@ Great thanks to Mic (2016) for providing the majority of the code structure [Get
 **the Startup Time variable refers to the amount of time until the natural gas turbine is generating Power, the Shutdown Time variable refers to the amount of time to slow down the turbine to zero Power*<br>
 
 ## Problem Solution in Python
-```ruby
+```python
 import numpy as np
 import pylab as plt
 from scipy import stats
 ```
 
-```ruby
+```python
 goal = 50                   #kWh, goal for the system to reach
 s_avg_cc = 0.3              # as decimal percentage of sky, average cloud cover
 s_std_cc = 0.1              # as decimal percentage of sky, standard deviation cloud cover
@@ -64,7 +64,7 @@ ng_shutdown_time = 2        # hours, time to shutdown natural gas turbine
 reward_function = [0,50,100]
 ```
 
-```ruby
+```python
 # Create Simulation
 def simulation(actions):
     reward = []
@@ -95,13 +95,13 @@ print(rewards)
 ```
 [0, 0, 50, 0, 50, 50, 50, 100, 100, 100, 100, 50, 50, 100, 50, 100, 50, 100, 0, 0, 50, 50, 50, 50]
 
-```ruby
+```python
 import itertools
 state_space = list(itertools.product([0, 1], repeat=24))
 len(state_space)
 ```
 
-```ruby
+```python
 %%time
 
 # takes 29 minutes to run
@@ -184,13 +184,13 @@ finished (1,0)<br>
 number of invalid states: 16768878<br>
 number of valid states 8338<br>
 
-```ruby
+```python
 goal_mapping = []
 for i in state_space:
     goal_mapping.append(simulation(i))
 ```
 
-```ruby
+```python
 %%time
 reward_matrix = []
 num_iterations = 3
@@ -216,7 +216,7 @@ round 2 winner was: 6773 with simulation: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0
 round 3 winner was: 6767 with simulation: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0)<br>
 Wall time: 1min 30s
 
-```ruby
+```python
 node_counter = 0
 state_lookup = {}
 for j in range(1,25):
@@ -258,7 +258,7 @@ print(available_actions)
 
 [(0, 2), (2, 4), (4, 7), ..., (12232, 17923), (17923, 26260), (17923, 26261)]
 
-```ruby
+```python
 points_list = available_actions
 # how many points in graph? x points
 MATRIX_SIZE = node_counter + 1
@@ -268,7 +268,7 @@ R = np.matrix(np.ones(shape=(MATRIX_SIZE, MATRIX_SIZE)))
 R *= -1
 ```
 
-```ruby
+```python
 # assign zeros to paths and 100 to goal-reaching point
 reward = -1
 for point in points_list:
@@ -294,7 +294,7 @@ for idx, term_node in enumerate(term_nodes):
 
 ```
 
-```ruby
+```python
 from numba import jit
 
 @jit(nopython=True) # Set "nopython" mode for best performance, equivalent to @njit
@@ -303,7 +303,7 @@ def go_fast_score(Q): # Function is compiled to machine code when called the fir
     return go_fast_score
 ```
 
-```ruby
+```python
 Q = np.matrix(np.zeros([MATRIX_SIZE,MATRIX_SIZE], dtype=int))
 
 # learning parameter
@@ -346,7 +346,7 @@ def update(current_state, action, gamma):
 update(initial_state, action, gamma)
 ```
 
-```ruby
+```python
 %%time
 
 # Training
@@ -364,7 +364,7 @@ for i in range(5000000):
 print("Trained Q matrix:")
 ```
 
-```ruby
+```python
 # Testing
 current_state = node_counter
 steps = [current_state]
@@ -392,7 +392,7 @@ Most efficient path:
 
 <img src="https://bmripper.github.io/ai_rl_visual.PNG" width=40% height=40%>
 
-```ruby
+```python
 for step in steps:
     for state in state_lookup:
         if state_lookup[state] == step:
