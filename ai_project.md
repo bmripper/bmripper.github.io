@@ -102,6 +102,7 @@ for i in range(len(reward_matrix)):
     print('round '+str(i+1),'winner was:',np.argmax(reward_matrix[i]),\
           'with simulation:',state_space[np.argmax(reward_matrix[i])])
 ```
+
 ```python
 Output: 
 shape: (3, 8338)
@@ -111,6 +112,8 @@ round 2 winner was with simulation: {6773: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 
 round 3 winner was with simulation: {6767: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0)}
 Wall time: 1min 30s
 ```
+
+This code block sets up the reinforcement Q-learning structure. Establishes the Q matrix based on the state-action possible pairs, the exploring parameter gamma, the functions for communicating the possible moves based on the programs current state, and the most optimal move given the Q matrix (if it isn't exploring). 
 
 ```python
 Q = np.matrix(np.zeros([MATRIX_SIZE,MATRIX_SIZE], dtype=int))
@@ -155,6 +158,8 @@ def update(current_state, action, gamma):
 update(initial_state, action, gamma)
 ```
 
+This code blocks is where I train the model (i.e., the model explores and fills out the Q matrix). 
+
 ```python
 %%time
 
@@ -172,6 +177,8 @@ for i in range(5000000):
     
 print("Trained Q matrix:")
 ```
+
+This code block is where I test the model, calculating the most optimal path optimizing reward. The output is the nodes to move through in the state space. 
 
 ```python
 # Testing
@@ -196,10 +203,16 @@ plt.plot(scores)
 plt.show()
 ```
 
+```python
+Output:
+
 Most efficient path:
 [26262, 1, 3, 6, 10, 16, 24, 36, 53, 79, 118, 176, 260, 382, 559, 817, 1195, 1751, 2569, 3772, 5536, 8120, 11902, 17438, 25546]
+```
 
 <img src="https://bmripper.github.io/ai_rl_visual.PNG" width=40% height=40%>
+
+This code block outputs the actions corresponding to the node locations from the prior output, meaning the move to take at each hour of the day. 
 
 ```python
 for step in steps:
@@ -207,6 +220,9 @@ for step in steps:
         if state_lookup[state] == step:
             print(state)
 ```
+
+```python
+Output:
 
 level1_(1,)<br>
 level2_(1, 1)<br>
@@ -232,3 +248,4 @@ level21_(1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1)<br>
 level22_(1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1)<br>
 level23_(1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1)<br>
 level24_(1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)
+```
