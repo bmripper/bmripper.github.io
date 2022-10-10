@@ -39,11 +39,15 @@ Big thanks to Mic (2016) for providing the majority of the code structure [Getti
 |Startup Time    |4           |hrs   |	
 |Shutdown Time   |2           |hrs   |
 
-**the Reward is given at the end of each hour, for a 24 hour period. If the Goal (energy demand) was met and if zero emissions were produced, then the entire Reward is given. If the Goal (energy demand) was met but emissions were produced, then half the Reward is given. If the Goal (energy demand) was not met, no Reward is given.*<br>
+*\*Reward is given at the end of each hour, for a 24 hour period. If the Goal (energy demand) was met and if zero emissions were produced, then the entire Reward is given. If the Goal (energy demand) was met but emissions were produced, then half the Reward is given. If the Goal (energy demand) was not met, no Reward is given.*<br>
 
-**the Startup Time variable refers to the amount of time until the natural gas turbine is generating Power, the Shutdown Time variable refers to the amount of time to slow down the turbine to zero Power*<br>
+*\*Startup Time variable refers to the amount of time until the natural gas turbine is generating Power, the Shutdown Time variable refers to the amount of time to slow down the turbine to zero Power*<br>
+
 
 ## Problem Solution in Python
+
+*The code blocks below provide only insight into the full Python program linked above*
+<br><br>
 
 This code block creates the simulator. The model parameters are initiated outside the function. An entire day is simulated. The simulator accepts a set of actions for the natural gas turbine (0=off, 1=on), then outputs a single array of the reward received at each hour. 
 
