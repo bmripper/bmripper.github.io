@@ -117,7 +117,7 @@ round 3 winner was with simulation: {6767: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 
 Wall time: 1min 30s
 ```
 
-This code block sets up the reinforcement Q-learning structure. Establishes the Q matrix based on the state-action possible pairs, the exploring parameter gamma, the functions for communicating the possible moves based on the programs current state, and the most optimal move given the Q matrix (if it isn't exploring). 
+This code block sets up the reinforcement Q-learning structure. Establishes the Q matrix based on the state-action possible pairs, the exploring parameter gamma, the functions for communicating the possible moves based on the model's current state, and the most optimal move given the Q matrix (if it isn't exploring). 
 
 ```python
 Q = np.matrix(np.zeros([MATRIX_SIZE,MATRIX_SIZE], dtype=int))
