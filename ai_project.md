@@ -19,7 +19,7 @@ Big thanks to Mic (2016) for providing a major part of the model's navigation co
 
 ### Environment
 
-<img align="right" src="https://bmripper.github.io/ai_model.PNG" width=50% height=50% >
+<img align="right" src="https://bmripper.github.io/ai_model.PNG" width=50% height=50% />
 
 |source|variable            |qty  |UoM           |
 |------|--------------------|-----|--------------|
