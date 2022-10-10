@@ -7,11 +7,11 @@ a power plant with solar panels and a natural gas turbine. I created a [simulato
 Great thanks to Mic (2016) for providing the majority of the code structure [Getting AI smarter with Q-learning: a simple first step in Python](http://firsttimeprogrammer.blogspot.com/2016/09/getting-ai-smarter-with-q-learning.html)!
 <br><br>
 
-|header         |value                                                                              |
-|---------------|-----------------------------------------------------------------------------------|
-|Program:       |https://bmripper.github.io/RL_power_plant.html                                     |
-|Author:        |Ripperger, Brent                                                                   |
-|Date Created:  |21 May 2022                                                                        |
+|header            |value                                                                              |
+|------------------|-----------------------------------------------------------------------------------|
+|Program:          |[Python](https://bmripper.github.io/RL_power_plant.html)                           |
+|Author:           |Ripperger, Brent                                                                   |
+|Date Created:     |21 May 2022                                                                        |
 
 <br>
 
@@ -44,26 +44,8 @@ Great thanks to Mic (2016) for providing the majority of the code structure [Get
 **the Startup Time variable refers to the amount of time until the natural gas turbine is generating Power, the Shutdown Time variable refers to the amount of time to slow down the turbine to zero Power*<br>
 
 ## Problem Solution in Python
-```python
-import numpy as np
-import pylab as plt
-from scipy import stats
-```
 
-```python
-goal = 50                   #kWh, goal for the system to reach
-s_avg_cc = 0.3              # as decimal percentage of sky, average cloud cover
-s_std_cc = 0.1              # as decimal percentage of sky, standard deviation cloud cover
-s_irr = 7                   # kj/m2, solar irradiance
-s_area = 100                # m2, solar panel area
-ng_power = 70               # kW, natural gas power generation
-ng_avg_uptime = 0.95        # as decimal percentage of an hour, average up-time of equipment
-ng_std_uptime = 0.01        # as decimal percentage of an hour, standard deviation up-time of equipment
-ng_emissions_per_kWh = 0.4127691    # emissions per kWh when an ng turbine is running
-ng_startup_time = 4         # hours, time to start-up natural gas turbine
-ng_shutdown_time = 2        # hours, time to shutdown natural gas turbine
-reward_function = [0,50,100]
-```
+This code block creates the simulator. The model parameters are initiated outside the function. An entire day is simulated. The simulator accepts a set of actions for the natural gas turbine (0=off, 1=on), then outputs a single array of the reward received at each hour. 
 
 ```python
 # Create Simulation
@@ -94,102 +76,13 @@ actions_guess = [int(a) for a in actions_guess]
 rewards = simulation(actions_guess)
 print(rewards)
 ```
-[0, 0, 50, 0, 50, 50, 50, 100, 100, 100, 100, 50, 50, 100, 50, 100, 50, 100, 0, 0, 50, 50, 50, 50]
 
 ```python
-import itertools
-state_space = list(itertools.product([0, 1], repeat=24))
-len(state_space)
+Output: 
+actions randomly generated: [0, 0, 50, 0, 50, 50, 50, 100, 100, 100, 100, 50, 50, 100, 50, 100, 50, 100, 0, 0, 50, 50, 50, 50]
 ```
 
-```python
-%%time
-
-# takes 29 minutes to run
-
-indexes = []
-b = (1,0,0,0,1)
-for idx, states in enumerate(state_space):
-    for i in range(len(states)):
-        if states[i:i+len(b)] == b:
-            indexes.append(idx)
-
-print("finished (1,0,0,0,1)")
-b = (1,0,0,1)
-for idx, states in enumerate(state_space):
-    for i in range(len(states)):
-        if states[i:i+len(b)] == b:
-            indexes.append(idx)
-
-print("finished (1,0,0,1)")
-b = (1,0,1)
-for idx, states in enumerate(state_space):
-    for i in range(len(states)):
-        if states[i:i+len(b)] == b:
-            indexes.append(idx)
-            
-print("finished (1,0,1)")
-b = (0,1,0)
-for idx, states in enumerate(state_space):
-    for i in range(len(states)):
-        if states[i:i+len(b)] == b:
-            indexes.append(idx)
-
-print("finished (0,1,0)")
-b = (0,0,0,1)
-for idx, states in enumerate(state_space):
-    for i in range(len(states)):
-        if states[0:i+len(b)] == b:
-            indexes.append(idx)
-            
-print("finished (0,0,0,1)")
-b = (0,0,1)
-for idx, states in enumerate(state_space):
-    for i in range(len(states)):
-        if states[0:i+len(b)] == b:
-            indexes.append(idx)
-
-print("finished (0,0,1)")
-b = (0,1)
-for idx, states in enumerate(state_space):
-    for i in range(len(states)):
-        if states[0:i+len(b)] == b:
-            indexes.append(idx)
-            
-print("finished (0,1)")
-b = (1,0)
-for idx, states in enumerate(state_space):
-    for i in range(len(states)):
-        if states[0:i+len(b)] == b:
-            indexes.append(idx)
-
-print("finished (1,0)")
-indexes.sort()
-indexes = set(indexes)
-indexes = list(indexes)
-print('number of invalid states:',len(indexes))
-for i in reversed(indexes):
-    state_space.pop(i)
-    
-print('number of valid states',len(state_space))
-```
-
-finished (1,0,0,0,1)<br>
-finished (1,0,0,1)<br>
-finished (1,0,1)<br>
-finished (0,1,0)<br>
-finished (0,0,0,1)<br>
-finished (0,0,1)<br>
-finished (0,1)<br>
-finished (1,0)<br>
-number of invalid states: 16768878<br>
-number of valid states 8338<br>
-
-```python
-goal_mapping = []
-for i in state_space:
-    goal_mapping.append(simulation(i))
-```
+This code block is an example of using brute force to solve the problem. The simulator is calculated three times for each possible state, note there is a limitation here because the simulator uses normal probability distributions and randomness. The output is the top performer for each round and actions achieving the top result, and the action that achieved the highest total reward over all three rounds.
 
 ```python
 %%time
@@ -209,99 +102,14 @@ for i in range(len(reward_matrix)):
     print('round '+str(i+1),'winner was:',np.argmax(reward_matrix[i]),\
           'with simulation:',state_space[np.argmax(reward_matrix[i])])
 ```
-
-(3, 8338)<br>
-average winner was: 7622 with simulation: (1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)<br>
-round 1 winner was: 7622 with simulation: (1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)<br>
-round 2 winner was: 6773 with simulation: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)<br>
-round 3 winner was: 6767 with simulation: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0)<br>
+```python
+Output: 
+shape: (3, 8338)
+average winner was with simulation: {7622: (1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)}
+round 1 winner was with simulation: {7622: (1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)}
+round 2 winner was with simulation: {6773: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)}
+round 3 winner was with simulation: {6767: (1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 0)}
 Wall time: 1min 30s
-
-```python
-node_counter = 0
-state_lookup = {}
-for j in range(1,25):
-    for i in state_space:
-        if 'level'+str(j)+'_'+str(i[:j]) not in state_lookup:
-            state_lookup['level'+str(j)+'_'+str(i[:j])] = node_counter
-            node_counter += 1
-
-
-states = []
-for i in state_space:
-    available_actions = []
-    for j in range(1,25):
-        available_actions.append(state_lookup['level'+str(j)+'_'+str(i[:j])])
-    
-    states.append(available_actions)
-
-
-available_actions = []
-term_nodes = [17924]
-           
-for i in states:
-    for j in range(1,25):
-        if j == 0:
-            if (0,i[j]) not in available_actions:
-                available_actions.append((0,i[j]))
-        elif j == 24:   
-            if (node_counter,0) not in available_actions and (node_counter,1) not in available_actions:
-                available_actions.append((node_counter,0))
-                available_actions.append((node_counter,1))
-            else:
-                term_nodes.append(i[-1])
-        else:
-            if (i[j-1],i[j]) not in available_actions:
-                available_actions.append((i[j-1],i[j]))
-            
-print(available_actions)
-```
-
-[(0, 2), (2, 4), (4, 7), ..., (12232, 17923), (17923, 26260), (17923, 26261)]
-
-```python
-points_list = available_actions
-# how many points in graph? x points
-MATRIX_SIZE = node_counter + 1
-
-# create matrix x*y
-R = np.matrix(np.ones(shape=(MATRIX_SIZE, MATRIX_SIZE)))
-R *= -1
-```
-
-```python
-# assign zeros to paths and 100 to goal-reaching point
-reward = -1
-for point in points_list:
-    print(point)
-    for idx, term_node in enumerate(term_nodes):
-        if point[0] == term_node or point[1] == term_node:
-            reward = sum(goal_mapping[idx])
-    
-    if point[0] in term_nodes:
-        R[point] = reward
-    else:
-        R[point] = 0
-
-    if point[1] in term_nodes:
-        R[point[::-1]] = reward
-    else:
-        # reverse of point
-        R[point[::-1]]= 0
-
-# add goal point round trip
-for idx, term_node in enumerate(term_nodes):
-    R[term_node,term_node]= sum(goal_mapping[idx])
-
-```
-
-```python
-from numba import jit
-
-@jit(nopython=True) # Set "nopython" mode for best performance, equivalent to @njit
-def go_fast_score(Q): # Function is compiled to machine code when called the first time
-    go_fast_score = Q/np.max(Q)*100
-    return go_fast_score
 ```
 
 ```python
