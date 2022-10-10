@@ -1,6 +1,6 @@
 # Geographic Information System Project
 
-The project was the final outcome from a class in Geographic Information System (GIS), where I learned to use [ArcGIS](https://www.arcgis.com/index.html). The project is a perfect representation of the skills and tools required to be successful in this field. The project required: extracting data from public websites, merging data from silo'd systems by primary keys, cleaning errors from merge discrepencies, transforming data into database structures ready for machine learning, loading into software (ArcGIS and Python), executing exploratory data analysis, implementing machine learning (clustering) models, and producing actionable insights.
+This project was the outcome of a class in Geographic Information System (GIS), where I learned to use [ArcGIS](https://www.arcgis.com/index.html). The project is a perfect representation of the skills and tools required to be successful in this field. The project required: extracting data from public websites, merging data from silo'd systems by primary keys, cleaning errors from merge discrepencies, transforming data into database structures ready for machine learning, loading into software (ArcGIS and Python), executing exploratory data analysis, implementing machine learning (clustering) models, and producing actionable insights.
 
 <br>
 
