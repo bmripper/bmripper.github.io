@@ -21,14 +21,14 @@ Big thanks to Mic (2016) for providing a major part of the model's navigation co
 
 <img align="right" src="https://bmripper.github.io/ai_model.PNG" width=50% height=50% >
 
-|source|variable            |qty  |UoM       |
-|------|--------------------|-----|----------|
-|Solar |Cloud Coverage      |0.3  |% of area |
-|Solar |St.D Cloud Coverage |0.1  |% of area |
-|Solar |Irradiance          |7    |kJ/m2     |
-|Solar |Area                |100  |m2        |
-|NG    |Power               |70   |kW        |
-|NG    |Up-Time             |0.95 |% runtime |
+|source|variable            |qty  |UoM           |
+|------|--------------------|-----|--------------|
+|Solar |Cloud Coverage      |0.3  |prop. of area |
+|Solar |St.D Cloud Coverage |0.1  |prop. of area |
+|Solar |Irradiance          |7    |kJ/m2         |
+|Solar |Area                |100  |m2            |
+|NG    |Power               |70   |kW            |
+|NG    |Up-Time             |0.95 |% runtime     |
 
 ### Rules
 
