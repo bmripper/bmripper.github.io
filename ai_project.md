@@ -261,3 +261,4 @@ Output:
 brute force: {7622: (1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)}
 Q-learning: level24_(1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)
 ```
+While these outputs are the same, there is one key item to note. Brute force takes 1 minute and 30 seconds, as compared to Q-learning which is near instantaneous
