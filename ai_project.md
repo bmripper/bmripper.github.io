@@ -86,7 +86,7 @@ Output:
 actions randomly generated: [0, 0, 50, 0, 50, 50, 50, 100, 100, 100, 100, 50, 50, 100, 50, 100, 50, 100, 0, 0, 50, 50, 50, 50]
 ```
 
-This code block is an example of using brute force to solve the problem. The simulator is calculated three times for each possible state, note there is a limitation here because the simulator uses normal probability distributions and randomness. The output is the top performer for each round and actions achieving the top result, and the action that achieved the highest total reward over all three rounds.
+This code block is an example of using brute force to solve the problem. The simulator is calculated three times for each possible state, note there is a limitation here because the simulator uses normal probability distributions and randomness. The output is the top performer at each round with the actions taken, and the performer that achieved the highest average total reward over all three rounds.
 
 ```python
 %%time
