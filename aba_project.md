@@ -23,6 +23,7 @@ In my example project, we look at USA divorce data. We are going to show the pro
 |Dimensions|3367 rows x 3 columns |
 
 *top 4 rows:*
+
 |ID |time between marriage and divorce or end of observation|divorce or not|
 |---|-------------------------------------------------------|--------------|
 |9  |10                                                     |No            |
