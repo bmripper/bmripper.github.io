@@ -41,4 +41,6 @@ We need to compute the actual hazard rate at each year. Therefore, we aggregate 
 |3   |3005                |0.020965058   |
 |4   |2869                |0.025095852   |
 
+<br>
+
 <img align="right" src="https://bmripper.github.io/hazard_ratio.PNG" width=50% height=50% />
