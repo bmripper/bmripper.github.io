@@ -35,6 +35,8 @@ In my example project, we look at USA divorce data. We are going to show the pro
 
 We need to compute the actual hazard rate at each year. Therefore, we aggregate the IDs into a countdown of remaining population at each year in the dataset (0-73 years). 
 
+*top 4 rows:*
+
 |time|population at time t|actual hazard ratio|
 |----|--------------------|--------------|
 |1   |3367                |0.027621028   |
