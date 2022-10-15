@@ -6,7 +6,6 @@ This project demonstrates my work in advanced business analytics, specially appl
 
 |header            |value                                                                              |
 |------------------|-----------------------------------------------------------------------------------|
-|Program:          |                                                                                   |
 |Author:           |Ripperger, Brent                                                                   |
 |Date Created:     |28 November 2021                                                                   |
 
