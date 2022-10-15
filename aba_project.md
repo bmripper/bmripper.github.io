@@ -55,3 +55,6 @@ We now will apply the [2-parameter Weibull](https://en.wikipedia.org/wiki/Weibul
 |c2            |0.0010 |
 |prop. group 1 |0.4292 |
 
+<br>
+
+![](https://bmripper.github.io/hazard_ratio_predict.png)
