@@ -1,5 +1,5 @@
 <h1 align="center">Brent Ripperger</h1>
-<p align="center">Business Intelligence and Data Analytics | Carnegie Mellon University</p>
+<p align="center">Carnegie Mellon University | Business Intelligence and Data Analytics</p>
 <br>
 
 ## Other Helpful Links
