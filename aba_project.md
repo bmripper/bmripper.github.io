@@ -43,4 +43,4 @@ We need to compute the actual hazard rate at each year. Therefore, we aggregate 
 
 <br>
 
-<img align="center" src="https://bmripper.github.io/hazard_ratio.png" width=50% height=50% />
+<img align="left" src="https://bmripper.github.io/hazard_ratio.png" width=80% height=80% />
