@@ -43,4 +43,15 @@ We need to compute the actual hazard rate at each year. Therefore, we aggregate 
 
 <br>
 
-<img align="left" src="https://bmripper.github.io/hazard_ratio.png" width=80% height=80% />
+![](https://bmripper.github.io/hazard_ratio.png)
+<br>
+We now will apply the [2-parameter Weibull](https://en.wikipedia.org/wiki/Weibull_distribution) distribution model. The Weibull model is great because it has only two parameters, but those two parameters allow it be very flexible and adapt to many data distributions. We will use maximum likelihood estimating to determine the optimal parameters (lambda and c) for this model. However, we are also going to make the underlying assumption that there are two "groups" of people in our dataset. Meaning, there isn't just one "divorce rate" among all people. We are going to assume there are actually two groups with different divorce rates. Therefore, we will have four parameters (lambda1, c1, lambda2, c2). 
+
+|parameter     |value  |
+|--------------|-------|
+|lambda1       |0.0404 |
+|c1            |1.1887 |
+|lambda2       |0.0188 |
+|c2            |0.0010 |
+|prop. group 1 |0.4292 |
+
