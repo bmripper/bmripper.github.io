@@ -2,7 +2,7 @@
 <p align="center">Business Intelligence and Data Analytics | Carnegie Mellon University</p>
 <br>
 
-## Other helpful links
+## Other Helpful Links
 |header             |value                                                |
 |-------------------|-----------------------------------------------------|
 |Resume:            |[Resume PDF](https://bmripper.github.io/General_Resume_2022_09.pdf)|
