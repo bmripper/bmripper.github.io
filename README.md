@@ -12,8 +12,8 @@
 
 ## Table of Contents
 
-- What to do when there is limited data, using theoretical distribution models? [Data Analytics Project](https://bmripper.github.io/aba_project.html)
-- What is the most likely outcome, using supervised learning with classification? [Data Visualization Project]
-- What are the underlying topics, using unsupervised learning with dimensionality reduction and clustering?
-- What is the optimal solution, using reinforcement learning? [Artificial Intelligence Project](https://bmripper.github.io/ai_project.html)
-- Optional: How to run data analyses on map and census data, using ArcGIS? [Geographic Information Systems Project](https://bmripper.github.io/gis_project.html)
+- What to do when there is limited data? [Data Analytics Project](https://bmripper.github.io/aba_project.html)
+- What group most likely belong? [Data Visualization Project]
+- What are the underlying document topics?
+- What is the optimal solution? [Artificial Intelligence Project](https://bmripper.github.io/ai_project.html)
+- Optional: How to run analyses on map and census data? [Geographic Information Systems Project](https://bmripper.github.io/gis_project.html)
