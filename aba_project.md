@@ -2,7 +2,7 @@
 
 The project demonstrates my work in advanced business analytics, specially applying statistics and distribution models to business data. In this project, I show how one can use distribution formluas to "fill-in" data gaps due to only having collected limited data. In order to do this, we first determine a theoretical/reasonable data distribution using domain knowledge. For example, for filling in height data one would assume a normal distribution. Another example, for counting the number of hurricanes in Florida one would assume a Poisson distribution. Once we determine the theoretical model, we learn the constants that minimize probability error [MLE](https://towardsdatascience.com/probability-concepts-explained-maximum-likelihood-estimation-c7b4342fdbb1). We then get a continuous data distribution that we can use to predict likely outcomes from unseen data.
 
-<br><br>
+<br>
 
 |header            |value                                                                              |
 |------------------|-----------------------------------------------------------------------------------|
@@ -30,3 +30,40 @@ top 4 rows:
 |13 |2                                                      |Yes           |
 |15 |17                                                     |Yes           |
 
+### Aggregate Data
+
+We need to compute the actual hazard rate at each year. Therefore, we aggregate the IDs into a countdown of remaining population at each year in the dataset (0-73 years). 
+
+|time|population at t|actual hazard ratio|
+|----|---------------|--------------|
+|1   |3367           |0.027621028   |
+|2   |3147           |0.020972355   |
+|3   |3005           |0.020965058   |
+|4   |2869           |0.025095852   |
+
+<html>
+<head>
+
+    <title>Add Title Here</title>
+
+    <script type="text/javascript"
+	    src="https://public.tableau.com/views/hazard_ratio/Sheet2?:language=en-US&:display_count=n&:origin=viz_share_link"></script>
+    <script type="text/javascript"></script>
+
+</head>
+
+<body>
+
+  <h1>Add Title Here</h1>
+
+    <button id = "exportPDF">Generate PDF</button>
+    <button id = "exportImage">Generate Image</button>
+
+
+    <div id="vizContainer"></div>
+
+    <script src="./app.js"></script>
+
+</body>
+
+</html>
