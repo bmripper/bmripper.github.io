@@ -44,4 +44,4 @@ We need to compute the actual hazard rate at each year. Therefore, we aggregate 
 <br>
 
 
-![](hazard_ratio.PNG)
+![](hazard_ratio.png)
