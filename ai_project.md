@@ -19,7 +19,7 @@ Big thanks to Mic (2016) for providing a major part of the model's navigation co
 
 ### Environment
 
-<img align="right" src="https://bmripper.github.io/ai_model.PNG" width=50% height=50% />
+![](https://bmripper.github.io/ai_model.PNG)
 
 |source|variable            |qty  |UoM           |
 |------|--------------------|-----|--------------|
@@ -214,7 +214,7 @@ Most efficient path:
 [26262, 1, 3, 6, 10, 16, 24, 36, 53, 79, 118, 176, 260, 382, 559, 817, 1195, 1751, 2569, 3772, 5536, 8120, 11902, 17438, 25546]
 ```
 
-<img src="https://bmripper.github.io/ai_rl_visual.PNG" width=40% height=40%>
+![](https://bmripper.github.io/ai_rl_visual.PNG)
 
 This code block outputs the actions corresponding to the node locations from the prior output, meaning the move to take at each hour of the day. 
 
