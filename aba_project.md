@@ -16,6 +16,7 @@ This project demonstrates my work in advanced business analytics, specially appl
 In my example project, we look at USA divorce data. We are going to show the probability of a divorce over time from a sample of people, the years they've been married/divorced, and if they divorced. Your first thought might be, why are we using non-business data? For example purposes, this dataset is easy to explain and quick to grasp. The results are also intuitive. However, a business example for this exact same problem would be: predict when a piece of equipment will breakdown. Say we had a dataset of equipment IDs, the amount of time the equipment has been operational, and is it running or not. We are going to determine the hazard curve for this dataset (i.e., what is the probability a piece of equipment breaks down each year in operation). We are doing all these steps for divorce data as our example. 
 
 ### Metadata
+
 |header    |value                 |
 |----------|----------------------|
 |Title     |Divorce data in USA   |
