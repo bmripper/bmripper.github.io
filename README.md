@@ -3,6 +3,7 @@
 <br>
 
 ## Other Helpful Links
+
 |header             |value                                                |
 |-------------------|-----------------------------------------------------|
 |Resume:            |[Resume PDF](https://bmripper.github.io/General_Resume_2022_09.pdf)|
@@ -10,6 +11,7 @@
 
 
 ## Table of Contents
+
 - [Data Analytics Project](https://bmripper.github.io/aba_project.html)
 - [Artificial Intelligence Project](https://bmripper.github.io/ai_project.html)
 - [Geographic Information Systems Project](https://bmripper.github.io/gis_project.html)
