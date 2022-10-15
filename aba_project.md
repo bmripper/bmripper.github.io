@@ -45,6 +45,9 @@ We need to compute the actual hazard rate at each year. Therefore, we aggregate 
 
 ![](https://bmripper.github.io/hazard_ratio.png)
 <br>
+
+### Apply Distribution Model
+
 We now will apply the [2-parameter Weibull](https://en.wikipedia.org/wiki/Weibull_distribution) distribution model. The Weibull model is great because it has only two parameters, but those two parameters allow it be very flexible and adapt to many data distributions. We will use maximum likelihood estimating to determine the optimal parameters (lambda and c) for this model. However, we are also going to make the underlying assumption that there are two "groups" of people in our dataset. Meaning, there isn't just one "divorce rate" among all people. We are going to assume there are actually two groups with different divorce rates. Therefore, we will have four parameters (lambda1, c1, lambda2, c2). 
 
 |parameter     |value  |
@@ -58,3 +61,7 @@ We now will apply the [2-parameter Weibull](https://en.wikipedia.org/wiki/Weibul
 <br>
 
 ![](https://bmripper.github.io/hazard_ratio_predict.png)
+
+### Interpretation
+
+What's the final conclusion? From the limited data provided, we were able to produce a continuous curve that fits our dataset extremely well. For any point in time, whether it's 4 years or 4.152 years, we have a quality estimate for the probability someone will get divorced. We also were able to determine that there are likely two groups within our dataset (~43% follow hazard ratio group 1, 57% follow hazard ratio group 2). We can also see that in general, the highest probability of getting divorced occurs in year 5. Additionally, each year after year 5, the odds of a divorce diminishes. Notice how at year 50, there was a spike in the actual hazard ratio, while our model stays consistent. That is due to the properties of our model choice. This is sometimes a very desirable result, and goes to show how using distribution models can extrapolate from limited data. If we relied solely on our dataset, our probability prediction would be too volatile at year 50. The Weibull model is actually more stable and intuitive.  
