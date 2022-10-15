@@ -4,7 +4,7 @@
 
 |Other helpful links|                                                     |
 |-------------------|-----------------------------------------------------|
-|Resume:            |[resume PDF](https://bmripper.github.io/General_Resume_2022_09.pdf)
+|Resume:            |[Resume PDF](https://bmripper.github.io/General_Resume_2022_09.pdf)
 |LinkedIn Profile:  |[https://www.linkedin.com/in/brent-ripperger-2b995a98/](https://www.linkedin.com/in/brent-ripperger-2b995a98/)|
 
 
