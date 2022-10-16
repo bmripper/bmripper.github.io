@@ -5,7 +5,6 @@ This project is an example of using classification techniques to determine which
 
 |header |value|
 |-------|-------------------|
-|title: |Homework 4: Classification|
 |author:|Brent Ripperger|
 |date:  |14 April 2020|
 
@@ -60,12 +59,22 @@ iris.lda$means
 iris.lda$prior
 ```
 
+|description|Sepal.Length|Sepal.Width|Petal.Length|Petal.Width|
+|-----------|------------|-----------|------------|-----------|
+|setosa     | 5.006|       3.428   |     1.462  |     0.246|
+|versicolor    |    5.936      | 2.770      |  4.260   |    1.326|
+|virginica      |   6.588  |     2.974    |    5.552      | 2.026|
+
 
 ##### Run the `plot()` command on your `iris.lda` object.  This produces what is called a discriminant plot.  When we have $K$ possible classes, we get $K-1$ so-called linear discriminants.  You should think of these as "derived features" that provide a helpful low-dimensional representation of the data.  The more spread out the classes appear in these discriminant plots, the better the LDA method performs (and vice versa).  You may supply the argument `col = as.numeric(iris$Species)` to colour the points based on the true class label.
 
 ```{r}
 plot(iris.lda,col = as.numeric(iris$Species))
 ```
+
+<br>
+![](https://bmripper.github.io/plot_lda.PNG)
+<br>
 
 #####  **(b)** Using the `predict` function, calculate the 3x3 confusion matrix for the lda classifier.  What is the overall misclassification rate of the LDA classifier?  Does LDA perform well on this problem?
 
@@ -77,6 +86,13 @@ truth2 <- iris$Species
 truth_conf <- ifelse(truth2=="setosa","x1", ifelse(truth2=="versicolor","x2","x3"))
 table(pred_conf,truth_conf)
 ```
+*prediction rows, actual columns*
+
+| |x1| x2| x3|
+|--------|---|---|---|
+|        x1| 50 | 0 | 0|
+|        x2|  0| 48 | 1|
+|        x3  |0  |2 |49|
 
 <font color="#157515">
 
@@ -98,6 +114,10 @@ zapsmall(pred2$posterior[120,])
 partimat(Species~.,data=iris,method="lda")
 ```
 
+<br>
+![](https://bmripper.github.io/predict_lda.PNG)
+<br>
+
 ##### Two of the classes begin with the letter v, which makes the above plot hard to interpret.  The following code produces a new data frame, where the Species column has been transformed according to: `S = setosa`, `C = versicolor`, `N = verginica`.  Try constructing the plot again.  Do all 2-variable combinations of the inputs do an equally good job of separating the three classes?  
 
 ```{r, cache = TRUE, fig.width = 10, fig.height = 6}
@@ -118,6 +138,10 @@ partimat(Species~.,data=iris2,method="lda")
 partimat(Species~.,data=iris2,method="qda")
 ```
 
+<br>
+![](https://bmripper.github.io/predict_qda.PNG)
+<br>
+
 <font color="#157515">
 
 - **Sepal Width and Petal Width both change substaintially. The others don't change much, or if they do it is mostly at the outlier points. The error rates didn't change much between lda and qda also.**
@@ -134,6 +158,14 @@ ggplot(data=iris,aes(Sepal.Width,fill=Species, alpha=1/2)) + geom_density() + gg
 ggplot(data=iris,aes(Petal.Length,fill=Species, alpha=1/2)) + geom_density() + ggtitle("Petal Length")
 ggplot(data=iris,aes(Petal.Width,fill=Species, alpha=1/2)) + geom_density() + ggtitle("Petal Width")
 ```
+
+<br>
+![](https://bmripper.github.io/plot_naive_sl.PNG)
+![](https://bmripper.github.io/plot_naive_sw.PNG)
+![](https://bmripper.github.io/plot_naive_pl.PNG)
+![](https://bmripper.github.io/plot_naive_pw.PNG)
+<br>
+
 
 <font color="#157515">
 
@@ -152,6 +184,14 @@ truth3 <- iris$Species
 truth3_conf <- ifelse(truth3=="setosa","x1", ifelse(truth3=="versicolor","x2","x3"))
 table(pred3_conf,truth3_conf)
 ```
+
+*prediction rows, actual columns*
+
+| |x1| x2| x3|
+|--------|---|---|---|
+|        x1| 50 | 0 | 0|
+|        x2|  0| 47 | 3|
+|        x3  |0  |3 |47|
 
 <font color="#157515">
 
