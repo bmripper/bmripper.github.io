@@ -16,7 +16,7 @@ This project is an example of using classification techniques to determine which
 library(ggplot2)
 library(ISLR)
 library(MASS)
-library(klaR)  # You may need to install this one
+library(klaR)
 library(knitr)
 library(glmnet)
 library(plyr)
