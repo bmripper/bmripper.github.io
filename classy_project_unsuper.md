@@ -22,7 +22,7 @@
     }
   </style>
   <div id="container">
-    <iframe id="iframe" sandbox="allow-scripts" src="https://bmripper.github.io/predict_lda.PNG/HW2%20%28Solutions%29.html"></iframe>
+    <iframe id="iframe" sandbox="allow-scripts" src="https://bmripper.github.io/HW2%20%28Solutions%29.html"></iframe>
   </div>
 </body>
 
