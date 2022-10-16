@@ -12,7 +12,7 @@ This project is an example of using classification techniques to determine which
 
 ### Preamble: Loading packages and data
 
-```{r, message=FALSE}
+```r
 library(ggplot2)
 library(ISLR)
 library(MASS)
