@@ -1,5 +1,3 @@
-<html>
-
 <head>
   <meta charset="utf-8">
   <title>HW2 (Solutions).html</title>
@@ -25,5 +23,3 @@
     <iframe id="iframe" sandbox="allow-scripts" src="https://bmripper.github.io/classy_unsupervised.html"></iframe>
   </div>
 </body>
-
-</html>
