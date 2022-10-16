@@ -13,7 +13,7 @@
 ## Table of Contents
 
 - What to do when there is limited data? [Data Analytics Project](https://bmripper.github.io/aba_project.html)
-- What group most likely belong? [Data Visualization Project]
+- What group most likely belong? [Data Prediction Project](https://bmripper.github.io/classy_project.html)
 - What are the underlying document topics?
 - What is the optimal solution? [Artificial Intelligence Project](https://bmripper.github.io/ai_project.html)
 - Optional: How to run analyses on map and census data? [Geographic Information Systems Project](https://bmripper.github.io/gis_project.html)
