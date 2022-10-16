@@ -9,6 +9,7 @@ This project is an example of using classification techniques to determine which
 |date:  |14 April 2020|
 
 <br>
+
 ### Preamble: Loading packages and data
 
 ```{r, message=FALSE}
@@ -29,7 +30,7 @@ cbPalette <- c("#999999", "#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2",
 
 options(scipen = 4)
 
-# Adulthood data
+Adulthood data
 n.obs <- 3000
 age <- pmin(pmax(rnorm(n.obs, mean = 30, sd = 10), 5), 50)
 is.adult <- as.numeric(age >= 18)
