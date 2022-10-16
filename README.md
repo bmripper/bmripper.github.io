@@ -7,7 +7,8 @@
 - Artificial Intelligence
 - Data Mining and Machine Learning
 - Unstructured Data Analytics
-- Advanced Business Analytics	Alternative Energy Power Generation Methods
+- Advanced Business Analytics	
+- Alternative Energy Power Generation
 - Privacy in the Digital Age
 - Organizational Design and Implementation
 
