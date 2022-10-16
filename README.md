@@ -1,6 +1,6 @@
 <h1 align="center">Brent Ripperger</h1>
 <p align="center">Carnegie Mellon University | Business Intelligence and Data Analytics</p>
-<br>
+
 
 ## Advanced Coursework
 
