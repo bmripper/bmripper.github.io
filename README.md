@@ -2,6 +2,16 @@
 <p align="center">Carnegie Mellon University | Business Intelligence and Data Analytics</p>
 <br>
 
+## Advanced Coursework
+
+- Artificial Intelligence
+- Data Mining and Machine Learning
+- Unstructured Data Analytics
+- Advanced Business Analytics	Alternative Energy Power Generation Methods
+- Privacy in the Digital Age
+- Organizational Design and Implementation
+
+
 ## Other Helpful Links
 
 |header             |value                                                |
