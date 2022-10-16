@@ -35,6 +35,7 @@ n.obs <- 3000
 age <- pmin(pmax(rnorm(n.obs, mean = 30, sd = 10), 5), 50)
 is.adult <- as.numeric(age >= 18)
 age.data <- data.frame(age = age, is.adult = as.factor(is.adult))
+
 ```
 
 
