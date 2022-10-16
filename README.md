@@ -22,6 +22,6 @@
 
 ## Table of Contents
 
-- What to do when there is limited data? [Data Analytics Project](https://bmripper.github.io/aba_project.html)
+- What to do when there is limited data? [Data Analytics Project](https://bmripper.github.io/da_project.html)
 - What is the optimal solution? [Artificial Intelligence Project](https://bmripper.github.io/ai_project.html)
 - Optional: How to run analyses on map and census data? [Geographic Information Systems Project](https://bmripper.github.io/gis_project.html)
