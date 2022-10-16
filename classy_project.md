@@ -5,7 +5,7 @@ This project is an example of using classification techniques to determine which
 
 |header |value|
 |-------|-------------------|
-|author:|Brent Ripperger|
+|author:|Brent Ripperger, special thanks to Professor Alexandra Chouldechova|
 |date:  |14 April 2020|
 
 <br>
