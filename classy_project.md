@@ -50,13 +50,13 @@ age.data <- data.frame(age = age, is.adult = as.factor(is.adult))
 
 ##### **(a)** Use the `lda` function from the `MASS` library to build an LDA classifier predicting `Species` from the 4 measurements in the `iris` data.  Call this fit `iris.lda`.  
 
-```{r}
+```r
 iris.lda <- lda(Species~.,data=iris)
 ```
 
 ##### Explore the `iris.lda` object to answer the following:  What are the group means and prior probabilities for each class?  
 
-```{r}
+```r
 iris.lda$means
 iris.lda$prior
 ```
@@ -70,7 +70,7 @@ iris.lda$prior
 
 ##### Run the `plot()` command on your `iris.lda` object.  This produces what is called a discriminant plot.  When we have $K$ possible classes, we get $K-1$ so-called linear discriminants.  You should think of these as "derived features" that provide a helpful low-dimensional representation of the data.  The more spread out the classes appear in these discriminant plots, the better the LDA method performs (and vice versa).  You may supply the argument `col = as.numeric(iris$Species)` to colour the points based on the true class label.
 
-```{r}
+```r
 plot(iris.lda,col = as.numeric(iris$Species))
 ```
 
@@ -80,7 +80,7 @@ plot(iris.lda,col = as.numeric(iris$Species))
 
 #####  **(b)** Using the `predict` function, calculate the 3x3 confusion matrix for the lda classifier.  What is the overall misclassification rate of the LDA classifier?  Does LDA perform well on this problem?
 
-```{r}
+```r
 pred2 <- predict(iris.lda,iris)
 pred_conf <- ifelse(pred2$class=="setosa","x1", ifelse(pred2$class=="versicolor","x2","x3"))
 
@@ -104,7 +104,7 @@ table(pred_conf,truth_conf)
 
 ##### Again using the `predict()` function:  What are the estimated posterior class probabilities for the 120th observation?  You should run `zapsmall()` on the vector of posterior probabilities to get it to display nicely.
 
-```{r}
+```r
 # pred2$posterior[120,]
 # zapsmall(pred2$posterior)
 zapsmall(pred2$posterior[120,])
@@ -112,7 +112,7 @@ zapsmall(pred2$posterior[120,])
 
 ##### **(c)** Use the `partimat()` function from the `klaR` package with `method = "lda"` to get bivariate plots showing the LDA decision boundaries.  Misclassifications are indicated by red text.  
 
-```{r, cache = TRUE, fig.width = 10, fig.height = 6}
+```r
 partimat(Species~.,data=iris,method="lda")
 ```
 
@@ -122,7 +122,7 @@ partimat(Species~.,data=iris,method="lda")
 
 ##### Two of the classes begin with the letter v, which makes the above plot hard to interpret.  The following code produces a new data frame, where the Species column has been transformed according to: `S = setosa`, `C = versicolor`, `N = verginica`.  Try constructing the plot again.  Do all 2-variable combinations of the inputs do an equally good job of separating the three classes?  
 
-```{r, cache = TRUE, fig.width = 10, fig.height = 6}
+```r
 iris2 <- transform(iris, Species = mapvalues(Species, c("setosa", "versicolor", "virginica"),
                                              c("S", "C", "N")))
 partimat(Species~.,data=iris2,method="lda")
@@ -136,7 +136,7 @@ partimat(Species~.,data=iris2,method="lda")
 
 ##### **(d)**  Using the `iris2` data frame, run the `partimat` command again, this time with `method = "qda"`.  Does it look like allowing quadratic boundaries changes much?  
 
-```{r, cache = TRUE, fig.width = 10, fig.height = 6}
+```r
 partimat(Species~.,data=iris2,method="qda")
 ```
 
@@ -154,7 +154,7 @@ partimat(Species~.,data=iris2,method="qda")
 
 ##### Based on these plots, does it look like Naive Bayes will be an effective classifier for the iris data?  Explain.  
 
-```{r}
+```r
 ggplot(data=iris,aes(Sepal.Length,fill=Species, alpha=1/2)) + geom_density() + ggtitle("Sepal Length")
 ggplot(data=iris,aes(Sepal.Width,fill=Species, alpha=1/2)) + geom_density() + ggtitle("Sepal Width")
 ggplot(data=iris,aes(Petal.Length,fill=Species, alpha=1/2)) + geom_density() + ggtitle("Petal Length")
@@ -177,7 +177,7 @@ ggplot(data=iris,aes(Petal.Width,fill=Species, alpha=1/2)) + geom_density() + gg
 
 ##### **(f)** Use the `NaiveBayes()` command with `usekernel = TRUE` to fit a Naive Bayes classifier to the `iris` data.  Save your output as `iris.nb`.  Produce a confusion matrix for the Naive Bayes classifier.   What is the misclassification rate of Naive Bayes on this problem?  How does the performance of Naive Bayes compare to that of LDA in this example?
 
-```{r}
+```r
 iris.nb <- NaiveBayes(Species ~ ., data = iris, usekernel = TRUE)
 pred3 <- predict(iris.nb,iris)
 pred3_conf <- ifelse(pred3$class=="setosa","x1", ifelse(pred3$class=="versicolor","x2","x3"))
@@ -203,7 +203,7 @@ table(pred3_conf,truth3_conf)
 
 ##### **(g)**  What is the true class of the 120th observation? What are the estimated posterior probabilities for the 120th observation according to Naive Bayes?  Are they similar to those estimated by LDA?  Do LDA and Naive Bayes result in the same classification for this observation?  Does either method classify this observation correctly?
 
-```{r}
+```r
 #LDA
 zapsmall(pred2$posterior[120,])
 #Naive Bayes
