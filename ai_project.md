@@ -46,7 +46,7 @@ Big thanks to Mic (2016) for providing a major part of the model's navigation co
 
 ## Problem Solution in Python
 
-*The code blocks below provide only insight into the full Python program linked above*
+*The code blocks below provide only insights into the full Python program linked above*
 <br><br>
 
 This code block creates the simulator. The model parameters are initiated outside the function. An entire day is simulated. The simulator accepts a set of actions for the natural gas turbine (0=off, 1=on), then outputs a single array of the reward received at each hour. 
@@ -229,7 +229,7 @@ for step in steps:
 Output:
 
 level1_(1,)
-level2_(1, 1)>
+level2_(1, 1)
 level3_(1, 1, 1)
 level4_(1, 1, 1, 1)
 level5_(1, 1, 1, 1, 1)
@@ -261,4 +261,4 @@ Output:
 brute force: {7622: (1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)}
 Q-learning: level24_(1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1)
 ```
-While these outputs are the same, there is one key item to note: brute force takes 1 minute and 30 seconds, as compared to Q-learning which takes 240 microseconds
+While these outputs are the same, there is one key item to note: brute force takes 1 minute and 30 seconds, as compared to Q-learning which takes 240 microseconds. Which means that if a system needs to make decisions real-time, the only solution would be Q-learning. In conclusion, the simple model implies that it actually would be possible to create an AI control system that determines the operatiors action plan for a given period of time. The next goal would be to have the model run every 1 minute, with a 15 minute action plan provided. Also, receiving accurate forecasts from the solar systems likely production. 
