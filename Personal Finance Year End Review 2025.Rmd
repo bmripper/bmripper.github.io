@@ -1,0 +1,923 @@
+---
+title: "Personal Finance, Year End Review"
+author: "Brent Ripperger"
+date: "2024-11-17"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+options(scipen = 999)
+library(dplyr)
+library(tidyverse)
+library(kableExtra)
+library(reshape2)
+
+# Vanguard Interest by Month
+vanguard.performance.details <- read.csv("~/Personal/Personal Finance/vanguard performance details.csv")
+ira.2024 <- 7000
+ira.2025 <- 4500
+
+# Taxes and Deductions
+taxes_deductions <- read.csv("~/Personal/Personal Finance/Data/final_paystub Crown Castle.csv")
+taxyear_transf.2023 <- -4220 # had to remove income that was in pay stubs but wasn't accurate. Number taken from tax estimate mom.xlsx
+BilfingerHSA_contr <- 500 # error overcontributing in 2023
+maxHSA_contri.2023 <- 3850
+maxHSA_contri.2024 <- 4150
+maxHSA_contri.2025 <- 500+2777
+
+# Assumptions
+car_depreciation.2023 <- 10717-13236 # was 1111
+car_depreciation.2024 <- 9048-10717 # was 850
+car_depreciation.2025 <- 8407-9048
+
+# Home Loan, Principal and Interest
+newrez_payment_history <- read.csv("~/Personal/Personal Finance/Data/newrez_payment_history 20250615 v2.csv")
+closing_costs.2025 <- -13157.6 # value from Empower split transaction
+unrealized_interest.home_value.2025 <- 272465.12-350662.40-(20368.50+60+122.2)+(350662.40-329000) # value from 719 Mellon bank sales documents
+home_down_payment.2025 <- -110000 #20% of purchase price $550k
+# Enter YTD principal and interest at each update (e.g., quarterly)
+home_principal_ytd.2025 <- -3197.58
+#home_interest_ytd.2025  <- -3934.52
+
+# Realized capital gains Vanguard
+realized_capital_gains.2023 <- 0
+realized_capital_gains.2024 <- 0
+realized_capital_gains.2025 <- 0#40929.60
+
+# 401(k) Interest by Year
+beg_balance.2023 <- 101224.79 #rollover from Principal
+employee_contri.2023 <- 11490.32-11490.32 + 1090.10/2 # value from Principal contributions with Bilfinger
+employer_contri.2023 <- 5769.12 + 1090.10/2 # value from Principal contributions with Bilfinger
+gain_loss.2023 <- 15218.47
+income_returns.2023 <- 2195.46
+
+beg_balance.2024 <- 135898.15
+employee_contri.2024 <- 11707.13-11707.13
+employer_contri.2024 <- 9427.70
+gain_loss.2024 <- 30371.82
+income_returns.2024 <- 2572.42
+
+beg_balance.2025 <- 189977.23
+employee_contri.2025 <- 0
+employer_contri.2025 <- 0
+gain_loss.2025 <- 33434.11
+income_returns.2025 <- 287.98
+schwab.performance.details <- data.frame(month=c("2023-12-31","2024-12-31","2025-12-31"),
+                                         beg_balance=c(beg_balance.2023,
+                                                       beg_balance.2024,
+                                                       beg_balance.2025),
+                                         deposits_withdrawals=c(employee_contri.2023+employer_contri.2023,
+                                                                employee_contri.2024+employer_contri.2024,
+                                                                employee_contri.2025+employer_contri.2025),
+                                         gain_loss=c(gain_loss.2023,
+                                                     gain_loss.2024,
+                                                     gain_loss.2025),
+                                         income_returns=c(income_returns.2023,
+                                                          income_returns.2024,
+                                                          income_returns.2025))
+
+# Account Balances
+
+## 2022
+property.home.2022 <- 303600
+
+## 2023
+cash.2023 <- 24772 # Empower
+ccd.2023 <- -5518 # Empower
+investments.2023 <- 347927-26839 # Empower, removing unvested RSUs
+property.home.2023 <- 321800 # Empower
+property.car.2023 <- round(10717,-2) # KBB
+mortage.2023 <- -1*(newrez_payment_history %>% 
+  filter(Transaction.Date == "2023-12-01"))$Principal.Balance
+net_worth.2023 <- cash.2023 + ccd.2023 + investments.2023 + property.home.2023 + 
+  property.car.2023 + mortage.2023
+
+## 2024
+cash.2024 <- 62090
+ccd.2024 <- -6256
+investments.2024 <- 455108
+property.home.2024 <- 329000
+property.car.2024 <- round(property.car.2023+car_depreciation.2024,-2)
+mortage.2024 <- -1*(newrez_payment_history %>% 
+  filter(Transaction.Date == "2024-12-01"))$Principal.Balance
+net_worth.2024 <- cash.2024 + ccd.2024 + investments.2024 + property.home.2024 + 
+  property.car.2024 + mortage.2024
+
+## 2025
+cash.2025 <- 47334+53406 #112343-41500-5240+50000
+ccd.2025 <- -6829
+investments.2025 <- 530906-53406#424214+41500-50000
+property.home.2025 <- 560000
+property.car.2025 <- round(property.car.2024+car_depreciation.2025,-2)
+mortage.2025 <- -436802
+net_worth.2025 <- cash.2025 + ccd.2025 + investments.2025 + property.home.2025 + 
+  property.car.2025 + mortage.2025
+account_balances <- data.frame(end_date=c("2023-12-31","2023-12-31",
+                                      "2023-12-31","2023-12-31",
+                                      "2023-12-31","2023-12-31",
+                                      "2023-12-31",
+                                      "2024-12-31","2024-12-31",
+                                      "2024-12-31","2024-12-31",
+                                      "2024-12-31","2024-12-31",
+                                      "2024-12-31",
+                                      "2025-12-31","2025-12-31",
+                                      "2025-12-31","2025-12-31",
+                                      "2025-12-31","2025-12-31",
+                                      "2025-12-31"),
+                               account=c("Cash", "Credit Card",
+                                         "Securities","Home",
+                                         "Car", "Mortgage", "Net Worth",
+                                         "Cash", "Credit Card",
+                                         "Securities","Home",
+                                         "Car", "Mortgage", "Net Worth",
+                                         "Cash", "Credit Card",
+                                         "Securities","Home",
+                                         "Car", "Mortgage", "Net Worth"),
+                               value=c(cash.2023, ccd.2023,
+                                       investments.2023, property.home.2023,
+                                       property.car.2023, mortage.2023,
+                                       net_worth.2023,
+                                       cash.2024, ccd.2024,
+                                       investments.2024, property.home.2024,
+                                       property.car.2024, mortage.2024,
+                                       net_worth.2024,
+                                       cash.2025, ccd.2025,
+                                       investments.2025, property.home.2025,
+                                       property.car.2025, mortage.2025,
+                                       net_worth.2025),
+                               category=c("Assets","Liabilities",
+                                          "Assets","Assets",
+                                          "Assets","Liabilities",
+                                          "Net Worth",
+                                          "Assets","Liabilities",
+                                          "Assets","Assets",
+                                          "Assets","Liabilities",
+                                          "Net Worth",
+                                          "Assets","Liabilities",
+                                          "Assets","Assets",
+                                          "Assets","Liabilities",
+                                          "Net Worth"))
+account_balances$end_date_yr <- paste0("yr",year(account_balances$end_date))
+account_balances$value <- format(round(account_balances$value,0),big.mark=",")
+
+# Transactions
+transactions <- read.csv("~/Personal/Personal Finance/Data/transactions_export_2025_Q3.csv")
+
+# Hayley 2022 Spring, Summer, Fall = 10330*3 = 30990 while pay 27207.48
+# estimated Hayley 2023 Spring, Summer, Fall =  while pay 29002 estimating gross income 32542 = 3540 in taxes
+# estimated Hayley 2024 Spring, Summer, Fall =  while pay 32520 estimating gross income 36489 = 3970 in taxes
+hayley_taxes_paid.2023 <- 0#-3540 but included in replaced values from tax return information
+hayley_taxes_paid.2024 <- -4300
+
+```
+
+## Data Sources
+
+In order to create a comprehensive view of our Personal Finances for 2024, I'm going to incorporate multiple data sources beyond just Empower data for the analysis. 
+
+|Source                                      |Description                 |Date      |Dimensions |
+|--------------------------------------------|----------------------------|----------|-----------|
+|Empower & Mint (transformed)   |Transactions   |`r max(transactions$Date)`|`r nrow(transactions)` x `r ncol(transactions)`|
+|Empower    |Account Balances '23 and '24   |`r max(account_balances$end_date)`|`r nrow(account_balances)` x `r ncol(account_balances)`        |
+|tax estimate_mom.xlsx    |Taxes '23    |2024-03-28|3 x 1|
+|Paystubs, Crown Castle and Crete United    |Taxes and Deductions |`r max(taxes_deductions$date)`|`r nrow(taxes_deductions)` x `r ncol(taxes_deductions)`|
+|Vanguard Performance Details   |Deposits and Returns   |`r max(vanguard.performance.details$month)`|`r nrow(vanguard.performance.details)` x `r ncol(vanguard.performance.details)`|
+|Charles Schwab Performance Details   |Deposits and Returns   |`r max(schwab.performance.details$month)`|`r nrow(schwab.performance.details)` x `r ncol(schwab.performance.details)`|
+|Newrez   |Home Loan, P&I   |`r max(newrez_payment_history$Due.Date)`|`r nrow(newrez_payment_history)` x `r ncol(newrez_payment_history)`|
+
+### Assumptions
+
+- Stock Market Average Return per Year (Dividends Reinvested), Last 20 Years: 10.473%
+- Average Return with Dividends Reinvested & Inflation Adjusted, Last 20 Years: 7.712%
+- Pittsburgh, PA Home Value, Last 1 Year: 4.0%
+- Honda Fit depreciation: -$1111 in 2023, -$850 in 2024
+
+Source: https://tradethatswing.com/average-historical-stock-market-returns-for-sp-500-5-year-up-to-150-year-averages/
+
+Source: https://www.zillow.com/home-values/26529/pittsburgh-pa/
+
+Source: https://www.kbb.com/honda/fit/2016/
+
+
+## Data ETL
+
+### Transactions
+
+- Before 2024: Direct export from Mint
+- On or After 2024: Direct export from Empower
+
+Both datasets are loaded and transformed within Power BI, Mint PBI Dashboard_V23_02.pbix, prior to being loaded into this analysis. The justification is that the model is already mapping Mint data to Empower data given for various categories and important tags (income, spending, investments, transfers, etc). There is a table at the back of the Power BI model that I saved and am using as a standard export format for this analysis.
+
+### Account Balances
+
+- 2023: direct input using Empower web portal, however overrode 1) car value with KBB's value of $9159 rounded to $9200, 2) home value from the end of 2022 with Zillow's value of market growth at +6% equaling $303,600, 3) securities removing the value of unvested Crown Castle RSUs
+- 2024: direct input using Empower web portal
+
+### Deposits and Returns
+
+- Brokerage Account: Vanguard and Charles Schwab
+- 401(k): Charles Schwab ('23 and '24). Technically, Principal with Bilfinger between Jan 1st thru Feb 10th 2023 however data not available. This means I technically had *some* capital gains for the month of January 2023 that will appear as deposits/withdrawals only. Therefore, capital gains slightly higher than values presented for 2023. I estimate this value to be close to $1,500.
+- 403(b): TIAA ('23 and '24)
+- HSA: WEX ('23), Optum ('23 and '24), EBMS ('24)
+- Home Equity: 719 Mellon St, Pittsburgh, PA 15206
+- Car: 2016 Honda Fit EX
+
+The above includes all possible sources of passive income. While I could gather data for all, I will only be grabbing data for the below sources:
+
+- Brokerage: Vanguard, logging into the web portal and extracting to Excel "Performance details" under the Performance section on their website. The data copies easily into Excel, just need to Find/Replace the special " " character from Vanguard and values are recognized in Excel. The data is provided for the entire history, going back to 2016. 
+- 401(k): Charles Schwab, logging into the web portal and inputting directly into R. Under the Personal Performance section, use data filter to grab both 2023 and 2024 data. Additionally, I used Principal transaction data from Mint to determine my amounts contributed for 2023 ($1090.10 employee and employer).
+
+*Note to self: not looking at Dividends, assuming all that data is in Transactions data*
+
+### Taxes and Deductions
+
+- 2023: Copied text and tables from UKG pay stub 12/29/2023, after logging into Crown Castle's UKG instance, into Excel. Replaced incorrect values (Federal Income Tax, State Tax, and City Tax) using accountant's data during 2023 tax season
+- 2024: Copied text and tables from UKG, after logging into each company's UKG instance, into Excel
+- HSA: Used transaction data to identify that Bilfinger provided $500 to my HSA during 2023. Therefore, adding $500 to tax and deductions data below.
+
+### Home Loan, Principal and Interest
+- Copied tables from web portal showing principal and interest payments, created file newrez_payment_history 20241123.csv
+
+## Balance Sheet
+
+```{r assets_liabilities}
+# temp <- account_balances %>%
+#   filter(year(end_date)==2023)
+# balance_sheet <- data.frame("header"=c("Assets", "Cash", "Securities", "Home",
+#                                        "Car", "Liabilities", "Mortgage", 
+#                                        "Credit Card Debt", "Net Worth"),
+#                             "dimension"=rep("yr2023",9),
+#                             "value"=c(cash.2023 + investments.2023 + 
+#                                         property.home.2023 + property.car.2023,
+#                                       cash.2023, investments.2023, 
+#                                       property.home.2023, property.car.2023, 
+#                                       mortage.2023 + ccd.2023, 
+#                                       mortage.2023,ccd.2023, net_worth.2023))
+
+balance_sheet <- account_balances %>% 
+  select(-end_date) %>%
+  mutate(account =  factor(account, levels = c("Cash", "Securities", "Home", 
+                                               "Car", "Mortgage", "Credit Card", 
+                                               "Net Worth"))) %>%
+  arrange(account) %>%
+  pivot_wider(names_from = end_date_yr, 
+              values_from = value) 
+
+#colnames(balance_sheet) <- c("", "Value")
+balance_sheet %>%
+  select(-category) %>%
+  kbl(col.names=c("","Value","Value","Value")) %>%
+  pack_rows(index = table(balance_sheet$category),label_row_css = "") %>%
+  kable_styling() %>% 
+  add_header_above(c("","as of Dec. 31, 2023","as of Dec. 31, 2024","as of Sep. 30, 2025"),align="l")
+```
+
+
+## Income Statment
+
+```{r functions}
+# Income calculator using Empower+Mint transactions
+# output follows Income = [Dividend, Salary, Interest Income] Spending = [Discretionary, Fixed, Home Improvement, Home Transaction Costs]
+transact_calculator <- function(df,exp_cat,year_for){
+  my_vector <- (df %>%
+         filter(Expense.Category == exp_cat) %>%
+         filter(Date >= paste0(year_for,"-01","-01") & 
+                  Date < paste0(year_for+1,"-01","-01")) %>%
+         group_by(Expense.Category,Spending.Type) %>%
+         summarise(amount=sum(Sum.of.Signed.Amount), .groups = 'keep'))$amount
+  if(length(my_vector)==2){return(c(my_vector,0,0))}
+  else if(length(my_vector)==3){return(c(my_vector,0))}
+  else{my_vector}
+}
+
+# Tax and Deductions calculator using paystub data
+# output follows [Fixed, Savings, Tax]
+taxdeduct_calculator <- function(df,year_for){
+  (df %>%
+         filter(year(date) == paste0(year_for)) %>%
+         group_by(hierarchy) %>%
+         summarise(amount=sum(value)))$amount
+}
+
+# Interest calculator using Vanguard and Charles Schwab data
+interest_calculator <- function(df1, df2, year_for){
+  sum((df1 %>% 
+         filter(month < paste0(year_for+1,"-01","-01") & 
+         month >= paste0(year_for,"-01","-01")))$gain_loss) +
+    sum((df2 %>% 
+         filter(month < paste0(year_for+1,"-01","-01") & 
+         month >= paste0(year_for,"-01","-01")))$gain_loss)
+}
+
+# Deposits/Withdrawals calculator using Vanguard and Charles Schwab data
+depwith_calculator <- function(df, year_for){
+  sum((df %>% 
+         filter(month < paste0(year_for+1,"-01","-01") & 
+         month >= paste0(year_for,"-01","-01")))$deposits_withdrawals)
+}
+
+# Dividend calculator using Vanguard and Charles Schwab data
+dividend_calculator <- function(df, year_for){
+    sum((df %>% 
+         filter(month < paste0(year_for+1,"-01","-01") & 
+         month >= paste0(year_for,"-01","-01")))$income_returns)
+}
+
+# Home Principal calculator using Newrez data
+home_principal_calculator <- function(df, year_for){
+    sum((df %>% 
+         filter(Due.Date < paste0(year_for+1,"-01","-01") & 
+         Due.Date >= paste0(year_for,"-01","-01")))$Principal.Amount)
+}
+
+# Home Interest calculator using Newrez data
+home_interest_calculator <- function(df, year_for){
+    -1*sum((df %>% 
+         filter(Due.Date < paste0(year_for+1,"-01","-01") & 
+         Due.Date >= paste0(year_for,"-01","-01")))$Interest.Amount)
+}
+
+#transact_calculator(transactions,"Income",2025)
+#transact_calculator(transactions,"Spending",2025)
+#taxdeduct_calculator(taxes_deductions,2023)
+#interest_calculator(vanguard.performance.details,schwab.performance.details,2023)
+#depwith_calculator(vanguard.performance.details,2023)
+#depwith_calculator(schwab.performance.details,2023)
+#dividend_calculator(schwab.performance.details,2023)
+#home_principal_calculator(newrez_payment_history,2023)
+#home_interest_calculator(newrez_payment_history,2023)
+
+# 2023
+
+unrealized_interest.stocks.2023 <- interest_calculator(vanguard.performance.details,
+                                                schwab.performance.details,
+                                                2023)
+unrealized_interest.car.2023 <- car_depreciation.2023
+unrealized_interest.home_value.2023 <- property.home.2023-property.home.2022
+unrealized_interest.2023 <- unrealized_interest.stocks.2023+
+  unrealized_interest.car.2023+
+  unrealized_interest.home_value.2023
+realized_interest.home.2023 <- transact_calculator(transactions,"Income",2023)[3]
+realized_principal.home.2023 <- home_principal_calculator(newrez_payment_history,2023)
+realized_interest.homeloan.2023 <- home_interest_calculator(newrez_payment_history,2023)
+interest.2023 <- unrealized_interest.2023 + realized_interest.home.2023 #+ realized_interest.homeloan.2023 
+
+gross_income.2023 <- sum(transact_calculator(transactions,"Income",2023)[1]+transact_calculator(transactions,"Income",2023)[2])+sum(taxdeduct_calculator(taxes_deductions,2023))*-1 + taxyear_transf.2023 + dividend_calculator(schwab.performance.details,2023) + depwith_calculator(schwab.performance.details,2023) - hayley_taxes_paid.2023 + realized_capital_gains.2023
+salary.2023 <- transact_calculator(transactions,"Income",2023)[2]+sum(taxdeduct_calculator(taxes_deductions,2023))*-1 + taxyear_transf.2023 + depwith_calculator(schwab.performance.details,2023) - hayley_taxes_paid.2023
+dividends.2023 <- transact_calculator(transactions,"Income",2023)[1] + dividend_calculator(schwab.performance.details,2023)
+taxes.2023 <- taxdeduct_calculator(taxes_deductions,2023)[3] + hayley_taxes_paid.2023
+savings.401k.2023 <- taxdeduct_calculator(taxes_deductions,2023)[2] + maxHSA_contri.2023 - 
+  dividend_calculator(schwab.performance.details,2023) - depwith_calculator(schwab.performance.details,2023)
+savings.HSA.2023 <- -maxHSA_contri.2023 - BilfingerHSA_contr
+fixed_spending.2023 <- transact_calculator(transactions, "Spending",2023)[2] + 
+  taxdeduct_calculator(taxes_deductions,2023)[1] + realized_principal.home.2023
+discretionary_spending.2023 <- transact_calculator(transactions,"Spending",2023)[1]
+home_improvement.2023 <- transact_calculator(transactions, "Spending",2023)[3]
+home_transaction_costs.2023 <- transact_calculator(transactions, "Spending",2023)[4]
+brokerage.2023 <- depwith_calculator(vanguard.performance.details,2023)+ 
+  transact_calculator(transactions,"Income",2023)[1]
+net_cash_reserves.2023 <- gross_income.2023+
+  taxes.2023+
+  fixed_spending.2023+
+  discretionary_spending.2023+
+  savings.401k.2023+
+  savings.HSA.2023-
+  brokerage.2023#-  realized_interest.home.2023
+
+
+# 2024
+
+unrealized_interest.stocks.2024 <- interest_calculator(vanguard.performance.details,
+                                                schwab.performance.details,
+                                                2024)
+unrealized_interest.car.2024 <- car_depreciation.2024
+unrealized_interest.home_value.2024 <- property.home.2024-property.home.2023
+unrealized_interest.2024 <- unrealized_interest.stocks.2024+
+  unrealized_interest.car.2024+
+  unrealized_interest.home_value.2024
+realized_interest.home.2024 <- transact_calculator(transactions,"Income",2024)[3]
+realized_principal.home.2024 <- home_principal_calculator(newrez_payment_history,2024)
+realized_interest.homeloan.2024 <- home_interest_calculator(newrez_payment_history,2024)
+interest.2024 <- unrealized_interest.2024 + realized_interest.home.2024 #+ realized_interest.homeloan.2024
+
+gross_income.2024 <- sum(transact_calculator(transactions,"Income",2024)[1]+transact_calculator(transactions,"Income",2024)[2])+sum(taxdeduct_calculator(taxes_deductions,2024))*-1 + dividend_calculator(schwab.performance.details,2024) + depwith_calculator(schwab.performance.details,2024) - hayley_taxes_paid.2024 + realized_capital_gains.2024
+salary.2024 <- transact_calculator(transactions,"Income",2024)[2]+sum(taxdeduct_calculator(taxes_deductions,2024))*-1 + depwith_calculator(schwab.performance.details,2024) - hayley_taxes_paid.2024
+dividends.2024 <- transact_calculator(transactions,"Income",2024)[1] + dividend_calculator(schwab.performance.details,2024)
+taxes.2024 <- taxdeduct_calculator(taxes_deductions,2024)[3] + hayley_taxes_paid.2024
+savings.401k.2024 <- taxdeduct_calculator(taxes_deductions,2024)[2] + maxHSA_contri.2024 - 
+  dividend_calculator(schwab.performance.details,2024) - depwith_calculator(schwab.performance.details,2024) - 
+  ira.2024
+savings.HSA.2024 <- -maxHSA_contri.2024
+fixed_spending.2024 <- transact_calculator(transactions, "Spending",2024)[2] + taxdeduct_calculator(taxes_deductions,2024)[1] - taxyear_transf.2023 + realized_principal.home.2024 #removing taxes paid for 2023, already in 2023 numbers
+discretionary_spending.2024 <- transact_calculator(transactions,"Spending",2024)[1]
+home_improvement.2024 <- transact_calculator(transactions, "Spending",2024)[3]
+home_transaction_costs.2024 <- transact_calculator(transactions, "Spending",2024)[4]
+brokerage.2024 <- depwith_calculator(vanguard.performance.details,2024)+ 
+  transact_calculator(transactions,"Income",2024)[1] - ira.2024
+net_cash_reserves.2024 <- gross_income.2024+
+  taxes.2024+
+  fixed_spending.2024+
+  discretionary_spending.2024+
+  savings.401k.2024+
+  savings.HSA.2024-
+  brokerage.2024#-  realized_interest.home.2024
+
+# 2025
+
+unrealized_interest.stocks.2025 <- interest_calculator(vanguard.performance.details,
+                                                schwab.performance.details,
+                                                2025)
+unrealized_interest.car.2025 <- car_depreciation.2025
+unrealized_interest.2025 <- unrealized_interest.stocks.2025+
+  unrealized_interest.car.2025+
+  unrealized_interest.home_value.2025
+realized_principal.home.2025 <- home_principal_calculator(newrez_payment_history,2025) + -home_principal_ytd.2025
+realized_interest.home.2025 <- transact_calculator(transactions,"Income",2025)[3] 
+realized_interest.homeloan.2025 <- home_interest_calculator(newrez_payment_history,2025)
+interest.2025 <- unrealized_interest.2025 + realized_interest.home.2025 #+ realized_interest.homeloan.2025
+
+gross_income.2025 <- sum(transact_calculator(transactions,"Income",2025)[1]+transact_calculator(transactions,"Income",2025)[2])+sum(taxdeduct_calculator(taxes_deductions,2025))*-1 + dividend_calculator(schwab.performance.details,2025) + depwith_calculator(schwab.performance.details,2025) + realized_capital_gains.2025
+salary.2025 <- transact_calculator(transactions,"Income",2025)[2]+sum(taxdeduct_calculator(taxes_deductions,2025))*-1 + depwith_calculator(schwab.performance.details,2025)
+dividends.2025 <- transact_calculator(transactions,"Income",2025)[1] + dividend_calculator(schwab.performance.details,2025)
+taxes.2025 <- taxdeduct_calculator(taxes_deductions,2025)[3]
+savings.401k.2025 <- taxdeduct_calculator(taxes_deductions,2025)[2] + maxHSA_contri.2025 - 
+  dividend_calculator(schwab.performance.details,2025) - depwith_calculator(schwab.performance.details,2025) - 
+  ira.2025
+savings.HSA.2025 <- -maxHSA_contri.2025
+fixed_spending.2025 <- transact_calculator(transactions, "Spending",2025)[2] + taxdeduct_calculator(taxes_deductions,2025)[1] + realized_principal.home.2025 #removing taxes paid for 2023, already in 2023 numbers
+discretionary_spending.2025 <- transact_calculator(transactions,"Spending",2025)[1] + closing_costs.2025
+home_improvement.2025 <- transact_calculator(transactions, "Spending",2025)[3]
+home_transaction_costs.2025 <- transact_calculator(transactions, "Spending",2025)[4]
+brokerage.2025 <- depwith_calculator(vanguard.performance.details,2025)#+transact_calculator(transactions,"Income",2025)[1] - ira.2025
+net_cash_reserves.2025 <- gross_income.2025+
+  taxes.2025+
+  fixed_spending.2025+
+  discretionary_spending.2025+
+  savings.401k.2025+
+  savings.HSA.2025-
+  brokerage.2025+ home_down_payment.2025
+
+# Income Statement
+
+
+# --- Rebuild simplified P&L following the final structure ---
+
+build_income_statement <- function(year, gross_income, salary, dividends, taxes,
+                                   fixed_expenses, discretionary_expenses,
+                                   home_improvement, home_transaction_costs, home_principal, 
+                                   retirement, hsa, brokerage, other_income = 0) {
+
+  data.frame(
+    Header = c(
+      "Total Income (Before Taxes)",
+      "  Salary",
+      "  Dividends & Realized Interest",
+      "  Other Income",
+      "Taxes",
+      "Net Income (After Taxes)",
+      "Operating Expenses",
+      "  Fixed Expenses",
+      "  Discretionary Expenses",
+      "Operating Profit (Savings Before Allocations)",
+      "Capital Expenditures (CapEx)",
+      "  Home Improvements",
+      "  Home Transaction Costs",
+      "Savings Allocations",
+      "  Retirement Contributions",
+      "  HSA Contributions",
+      "  Brokerage / Investments",
+      "  Home Principal",
+      "Net Surplus / Deficit"
+    ),
+    dimension = paste0("yr", year),
+    value = c(
+      gross_income, # Total income before taxes
+      salary,                  # Salary
+      dividends,               # Dividends
+      other_income,            # Other realized gains / misc
+      taxes,                   # Taxes
+      gross_income + taxes, # Net income after taxes
+      fixed_expenses+discretionary_expenses,  # Operating expenses header
+      fixed_expenses,          # Fixed
+      discretionary_expenses,  # Discretionary
+      gross_income + taxes +
+        fixed_expenses + discretionary_expenses,  # Operating profit
+      -home_improvement-home_transaction_costs,  # CapEx header
+      -home_improvement,        # CapEx
+      -home_transaction_costs,  # capex
+      -retirement-hsa+brokerage+home_principal,  # Savings header
+      -retirement,             # 401k
+      -hsa,                    # HSA
+      brokerage,              # Brokerage
+      home_principal,
+      gross_income + taxes + 
+        fixed_expenses + discretionary_expenses + 
+        home_improvement + home_transaction_costs + 
+        retirement + hsa - brokerage + -home_principal   # Final net surplus
+    )
+  )
+}
+
+# ---- Plug in your existing variables ----
+income_statement.2023 <- build_income_statement(
+  year = 2023,
+  gross_income = gross_income.2023,
+  salary = salary.2023,
+  dividends = dividends.2023,
+  other_income = realized_capital_gains.2023,
+  taxes = taxes.2023,
+  fixed_expenses = fixed_spending.2023,
+  discretionary_expenses = discretionary_spending.2023,
+  home_improvement = home_improvement.2023,
+  home_transaction_costs = home_transaction_costs.2023, 
+  retirement = savings.401k.2023,
+  hsa = savings.HSA.2023,
+  brokerage = brokerage.2023,
+  home_principal = realized_principal.home.2023
+)
+
+income_statement.2024 <- build_income_statement(
+  year = 2024,
+  gross_income = gross_income.2024,
+  salary = salary.2024,
+  dividends = dividends.2024,
+  other_income = realized_capital_gains.2024,
+  taxes = taxes.2024,
+  fixed_expenses = fixed_spending.2024,
+  discretionary_expenses = discretionary_spending.2024,
+  home_improvement = home_improvement.2024,
+  home_transaction_costs = home_transaction_costs.2024,
+  retirement = savings.401k.2024,
+  hsa = savings.HSA.2024,
+  brokerage = brokerage.2024,
+  home_principal = realized_principal.home.2024
+)
+
+income_statement.2025 <- build_income_statement(
+  year = 2025,
+  gross_income = gross_income.2025,
+  salary = salary.2025,
+  dividends = dividends.2025,
+  other_income = realized_capital_gains.2025,
+  taxes = taxes.2025,
+  fixed_expenses = fixed_spending.2025,
+  discretionary_expenses = discretionary_spending.2025,
+  home_improvement = home_improvement.2025,
+  home_transaction_costs = home_transaction_costs.2025,
+  retirement = savings.401k.2025,
+  hsa = savings.HSA.2025,
+  brokerage = brokerage.2025,
+  home_principal = realized_principal.home.2025
+)
+
+# Combine and format
+income_statement <- bind_rows(income_statement.2023, income_statement.2024, income_statement.2025) %>%
+  pivot_wider(names_from = dimension, values_from = value)
+
+
+# Calculate % of income
+for (yr in c(2023, 2024, 2025)) {
+  base <- get(paste0("gross_income.", yr))
+  income_statement[[paste0("perc", yr)]] <- round(income_statement[[paste0("yr", yr)]] / base * 100, 1)
+  income_statement[[paste0("perc", yr)]][is.na(income_statement[[paste0("perc", yr)]])] <- ""
+  income_statement[[paste0("perc", yr)]] <- paste0(income_statement[[paste0("perc", yr)]], "%")
+}
+
+income_statement$yr2023 <- format(round(income_statement$yr2023, 0), big.mark = ",", nsmall = 0)
+income_statement$yr2024 <- format(round(income_statement$yr2024, 0), big.mark = ",", nsmall = 0)
+income_statement$yr2025 <- format(round(income_statement$yr2025, 0), big.mark = ",", nsmall = 0)
+
+income_statement <- income_statement %>%
+  select(
+    "Header",
+    "yr2023", "perc2023",
+    "yr2024", "perc2024",
+    "yr2025", "perc2025"
+  )
+
+# Rename columns for readability
+colnames(income_statement) <- c("", "Value","%", "Value","%", "Value","%")
+#colnames(income_statement) <- c(
+#  "", 
+#  "Value 2023", "% 2023",
+#  "Value 2024", "% 2024",
+#  "Value 2025", "% 2025"
+#)
+
+# --- Apply kable formatting ---
+income_statement %>%
+  kbl(
+    align = c("l", rep("r", 6)),
+    format.args = list(big.mark = ",", scientific = FALSE),
+    caption = "*data updated Jan. 2023 - Sep. 2025"
+  ) %>%
+  kable_styling(full_width = TRUE) %>%
+  add_indent(c(2, 3, 4, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18)) %>%
+  row_spec(c(1, 5, 6, 7, 10, 11, 14, 19), bold = TRUE, hline_after = TRUE) %>%
+  add_header_above(c("","2023","","2024","","2025",""),align="l")
+```
+
+## Insights to consider
+
+### Year 2023
+
+- Total income: $5,700 (3.4%) employer contributions to my 401(k), remainder was salary and dividends
+- Savings rate: 39% with 97% routed to investments, savings rate includes home principal payments
+- FHI: $63,000 which covered 83% of all expenses. However, this resulted from a year of around 20% market performance which is nearly 2x the expected performance of 10%. Therefore, I can really only confidently say about 41% of expenses are covered with passive income sources. This number slightly differs from above values because 1) needed to make proper adjustments for mortgage payments I'm on the hook to make and 2) included dividend income
+- Home mortgage paydown: Paid off 2.3% of home principal which equates to now owning about 9.0% of our home
+- AAI: we should expect a 7% growth in Assets for 2024, equating to $47,400
+- LWI: we are living very much within our means. For every 1 month worked, we stashed away 2.3x our fixed expenses
+- LHI: I spent 27% of my waking hours driving to/from Crown's office (6 hrs/wk) and spending time in office doing work I didn't enjoy (3 out of 5 days). This equates to roughly 225 hours/year.
+
+### Year 2024
+
+- Total income: $16,881 (7.2%) Bonus + $8,333 (3.6%) vested RSUs + $9,428 (4.0%) employer contributions to 401(k), remainder was salary and dividends
+- Savings rate: 45% with 73% routed to investments, savings rate includes home principal payments. Most experts recommend saving 20% to 30%, meaning we saved $35,000 to $58,000 more than is recommended
+- Cash reserves: $30,000 was routed to cash reserves this year, due to the 20% down payment upcoming in 2025
+- FHI: 102% of all expenses covered with passive income. However, this resulted from a year of around 20% market performance which is nearly 2x the expected performance of 10%. Therefore, I can really only confidently say about 50% of expenses are covered with passive income sources
+- Home mortgage paydown: Paid off 2.5% of home principal which equates to now owning about 12% of our home
+- AAI: we should expect a 7% growth in Assets for 2024, equating to $59,000
+- LWI: we are living very much within our means. For every 1 month worked, we stashed away 3.2x our fixed expenses
+- LHI: I spent 13% of my waking hours. Number halved from last year, due to changing jobs.
+- Expenses stayed stable, even given a luxury ring purchase of $5800. That was due to saving... 1) $9000 switching jobs away from Crown's daily cafe lunch and less gas/fuel, 2) $500 Costco shopping, 3) $150 switching to Mint Mobile from Verizon phone plan ($400 annualized), 4) $5000 less travel expenses
+
+### Year 2025 thru Q2
+
+- Sold Pittsburgh home for $350k with buyers also paying their 3% realtor fee. Additionally, no inspection credits resulting in full realization of $6k credit for our purchase in Oct 2020. This equates to a $71k ROI ($55k in capital gains + $10k realtor savings + $6k credits realized). Our realtor only expected $40k, meaning our home improvements pre-sale gained us $31k in value! Our home improvement materials (~$475) + home services ($525) + my home improvement labor (~$2.5k) resulted in an ROIC = 886%. Our net after fees cash was $78k, after paying $10k of closing costs and $10k realtor fees.
+- The other major transaction worth detailing is the St. Louis' home transaction at $129k = $110k 20% down payment + $8k points buy-down (6.25% -> 5.375%) + $11k closing costs incl. hand money and bank fees. The interesting item there is our $8k capital investment towards points buy-down, saving us $200/month meaning a buyback period of roughly 3.5 years. Seller covered Paul's realtor fees. Negotiated inspections and received furniture instead of fixing issues, received dining room table + chairs + leather ottoman + dining cabinets + kitchen chairs (~$2500). Also purchased from sellers 2x bedside tables and a dresser for $1250 which is excluded from the $129k. 
+- Taxes paid is lower than will be required, Hayley must pay personal income tax on her own (currently behind $1.2k) and long-term capital gains will be due for the $120k worth of stocks sale (~$4k)
+- Expenses are much higher this year, driven by home improvement ($7k) and home services ($19k). These expenses are mainly new home related (e.g., closing costs $11k, points buy-down $8k, carpet $3k, painting $3k). Removing those puts us to $18k in Discretionary spending, which is similar to prior years (+/- $1k). Food is trending down by $1k YoY.
+
+
+## Metrics of Interest
+
+I'm going to use https://bassamsalem.com/2013/09/22/personal-finance-kpis/ to calculate interesting metrics for measuring financial health:
+
+- Relative Wealth Index (RWI) = Net Worth / Consumable Assets
+- Asset Appreciation Index (AAI) = Expected value of assets in 12 months / actual value of assets now
+- Living Within Means Index (LWI) = Total After-Tax Income / Fixed Expenses
+- Income Independence Index (III) = Passive Annual Income / Total Annual Income
+- Financial Independence Index (FHI) = Passive Annual Income / Total Annual Expenses
+- Life Happiness Index (LHI) = # of daily hours doing what you want / # of non-required-sleep hours per day
+
+
+```{r rwi, echo=FALSE}
+# 2023
+
+rwi.2023 <- net_worth.2023/(property.home.2023+property.car.2023)
+aai.2023 <- 1+ (investments.2023*0.10473+property.home.2023*0.04-car_depreciation.2023)/(cash.2023+investments.2023+property.home.2023+property.car.2023)
+lwi.2023 <- -1*(gross_income.2023+taxes.2023)/(fixed_spending.2023)
+iii.2023 <- (interest.2023+transact_calculator(transactions,"Income",2023)[1])/(gross_income.2023+interest.2023)
+iii_adj.2023 <- -1*(interest.2023+transact_calculator(transactions,"Income",2023)[1])/(fixed_spending.2023+discretionary_spending.2023)
+lhi.2023 <- 1-( 1.5*4 + 8*5*0.6 )/112
+# 1.5hr/day, 4 days a week driving to Crown
+# 60% of 8 hours for 5 days a week (reduced by 7% to 60% due to working out during day sometimes) spent at Crown doing work I didn't enjoy
+# slept 8 hours a night = 16 hrs* 7 days = 112 hrs/week
+
+# 2024
+
+rwi.2024 <- net_worth.2024/(property.home.2024+property.car.2024)
+aai.2024 <- 1+ (investments.2024*0.10473+property.home.2024*0.04-car_depreciation.2024)/(cash.2024+investments.2024+property.home.2024+property.car.2024)
+lwi.2024 <- -1*(gross_income.2024+taxes.2024)/(fixed_spending.2024)
+iii.2024 <- (interest.2024+transact_calculator(transactions,"Income",2024)[1])/(gross_income.2024+interest.2024)
+iii_adj.2024 <- -1*(interest.2024+transact_calculator(transactions,"Income",2024)[1])/(fixed_spending.2024+
+                                                                                      discretionary_spending.2024)
+lhi.2024 <- 1-( 1.5*4/2 + 8*5*0.6/2)/112
+# 6 months driving to Crown still before switching to Crete which is 1.5*4/2
+# only enjoyed 40% of the work I did while at Crown hence 40hr/wk *60% then 6 motnhs is the 2
+
+# 2025
+
+rwi.2025 <- net_worth.2025/(property.home.2025+property.car.2025)
+aai.2025 <- 1+ (investments.2025*0.10473+property.home.2025*0.04-car_depreciation.2025)/(cash.2025+investments.2025+property.home.2025+property.car.2025)
+lwi.2025 <- -1*(gross_income.2025+taxes.2025)/(fixed_spending.2025)
+iii.2025 <- (interest.2025+transact_calculator(transactions,"Income",2025)[1])/(gross_income.2025+interest.2025)
+iii_adj.2025 <- -1*(interest.2025+transact_calculator(transactions,"Income",2025)[1])/(fixed_spending.2025+
+                                                                                      discretionary_spending.2025)
+lhi.2025 <- 1-((4+1+4)/(16*7))
+# 4 hours a week doing things I don't enjoy. Things like cleaning and dishes. Sometimes I enjoy little parts of it (laundry and lawn care).
+# 1 hour/week doing monthly financial simulations and analysis that doesn't really generate much value
+# 2 hours on 1:1s during job and 2 hours mtgs I don't enjoy
+```
+
+
+||2023|2024|2025|
+|--|--|--|--|
+|Relative Wealth Index (RWI)|`r format(round(rwi.2023,2),nsmall=2)`|`r format(round(rwi.2024,2),nsmall=2)`|`r format(round(rwi.2025,2),nsmall=2)`|
+|Asset Appreciation Index (AAI)|`r format(round(aai.2023,2),nsmall=2)`|`r format(round(aai.2024,2),nsmall=2)`|`r format(round(aai.2025,2),nsmall=2)`|
+|Living Within Means Index (LWI)|`r format(round(lwi.2023,2),nsmall=2)`|`r format(round(lwi.2024,2),nsmall=2)`|`r format(round(lwi.2025,2),nsmall=2)`|
+|Income Independence Index (III)|`r format(round(iii.2023,2),nsmall=2)`|`r format(round(iii.2024,2),nsmall=2)`|`r format(round(iii.2025,2),nsmall=2)`|
+|Financial Independence Index (FHI)|`r format(round(iii_adj.2023,2),nsmall=2)`|`r format(round(iii_adj.2024,2),nsmall=2)`|`r format(round(iii_adj.2025,2),nsmall=2)`|
+|Life Happiness Index (LHI)|`r format(round(lhi.2023,2),nsmall=2)`|`r format(round(lhi.2024,2),nsmall=2)`|`r format(round(lhi.2025,2),nsmall=2)`|
+|**Financial Health Index (FHI)**|**`r format(round(rwi.2023*aai.2023*lwi.2023*iii.2023*lhi.2023,2),nsmall=2)`**|**`r format(round(rwi.2024*aai.2024*lwi.2024*iii.2024*lhi.2024,2),nsmall=2)`**|**`r format(round(rwi.2025*aai.2025*lwi.2025*iii.2025*lhi.2025,2),nsmall=2)`**|
+
+
+## Comments about 2025
+
+### Financial Strategy, applicable through 2026
+*developed Jul. 2025*
+
+1. Savings rate maintains 35% (25% long-term and 10% short-term), to ensure we are savings for the future while also saving for uniquely large upcoming purchases (home improvement, car, vacations, tuition, etc)
+2. Maintain $100k in short-term cash, i.e., 6-months expenses + major purchases within one year + 10% uncertainty
+3. Continue to invest-in and improve home, within short-term savings rate
+4. No new debt allowed
+5. Maximize 401k and HSA contributions in 2026
+6. Manage potential risks, to ensure adequate emergency fund and savings
+7. Establish estate plan by or before children are born
+
+#### Investing Strategy
+
+1. Invest in growth index funds with Dollar Cost Averaging (DCA), easy to maintain and low fees
+2. Maintain appropriate asset allocations:
+
+- Save vs Invest: 2:5 ratio short-term to long-term
+- Short-term: 1:2 ratio US Bank to money market fund (VMFXX)
+- Long-term: 1:2 ratio international to US stocks
+
+#### Major Upcoming Purchases
+
+1. Car: $20k (1 year) + $15k (2 year)
+2. Child: $10k (1 year)
+3. Home improvement:
+
+- Paint exterior: $3k (1 year)
+- New shed with Bike storage and porch roof: $3k (1 year)
+- New roof: $10k-$15k (5 years)
+- New furnaces: $5k-$15k (5 years)
+
+### Circle of Control
+
+Knowing this information, how should I influence my Circle of Control (https://www.mrmoneymustache.com/2013/10/07/how-big-is-your-circle-of-control/). Should I change...
+
+1. How I invest my money? 
+2. How I spend my money?
+3. How I invest my free time?
+4. What I learn?
+5. ~~How I exercise?~~
+6. ~~What I eat?~~
+7. ~~How I vote?~~
+8. ~~What friends I choose?~~
+9. ~~Where I work?~~
+10. ~~Where I live?~~
+11. ~~Run for office?~~
+
+### Facts
+
+- Moving to St. Louis in June 2025
+- Selling home in Pittsburgh
+- Buying more expensive home in St. Louis
+- Expect medical expenses around having kids
+
+### Things I Want to Work On
+
+1. Figure out where I should donate/give
+2. Upgrade home
+
+
+#### How I invest my free time?
+
+**While this doesn't require (substantial?) additional money, I do want to keep a few priorities in focus for 2025:**
+
+1. More time towards higher-level decision-making. For example, less time crunching financial numbers on monthly spending analyses. Solution: Establish plans that I can just follow, instead of needing to run analyses every time I want to optimize some little part of our finances based on new life information. I want to set a plan and forget it during the year, except with maybe a quarterly review to check-in. 
+2. More time gaining new experiences. For example, spend time with friends, go on a vacation somewhere new, become a parent, white water rafting, MLS games, etc
+3. Gain new skills. For example, mountain biking, rock climbing, soccer, etc
+
+
+#### How I spend my money?
+
+The question becomes, should I use my money to support the goals above?
+
+1. I want to upgrade our home to increase our time spent at home, additionally space for a larger family. $550k home = $3625/month **We would need to maintain a gross income of $185k to keep our mortgage within 30% of take-home pay.** However, Dave Ramsey recommends a mortgage payment at 25% take-home pay for a 15-yr fixed rate mortgage. This would equate to around a $4500/month mortgage (not including my bonus).
+2. I want to upgrade our car to something more comfortable and more technology (both engine and entertainment). Additionally, our Honda Fit is above 100k miles and some issues have started to arise (shocks rusting and electrical issue with alarm computer).
+
+#### What I learn?
+
+I want to increase my knowledge around non-profit organizations in St. Louis. I want to start building a baseline knowledge for my future charitable contributions, either money or time. This means starting to understand where I want my resources to go. Right now I'm between 1) energy efficiency like residential heat pumps to support high energy-burdened homeowners 2) education like public school test scores (and creative ways to use funding available), technician training programs, personal finance, computer science/analytics, etc. 
+
+## Financial Goals
+
+1. Live a long and healthy life
+2. Spend lots of time with Hayley, family, and close friends
+3. Spend time in beautiful, comfortable homes in scenic places
+4. Do what I choose, when I choose (e.g., add value to people's lives)
+5. Spend time doing challenging things and seeing new places
+6. Donate my entire social security income each year
+7. Be able to afford certain luxury items (nice clothes, first class flights, sports car, outsourced labor, nice electronics, etc)
+
+Budget: 
+
+- Family trips $10,000
+- Friend trips $5,000
+- Scenic trips $20,000
+- Challenging trips $10,000
+- SS donations $50,000
+- Subtotal $95,000
+- Living expenses $75,000
+- Undefined risk (~18%) $30,000
+- Total $200,000
+- 4% withdrawal rate $4M to $5M portfolio
+
+To get there, in addition to the $455k in securities already, I just need to save another $20k/year for 33 years @ 6% interest. By 65, I could start the life above.
+
+```{r chatGPT try}
+income_statement.2023 <- data.frame(
+  "Header"=c("Income before taxes", "Salary", "Dividends", "Taxes", 
+           "Income after taxes", "Total expenses", "Fixed expenses", 
+           "Discretionary expenses", "Home Improvement", "Income after taxes and expenses (i.e., savings)", 
+           "Retirement contributions", "HSA contributions", "Brokerage account", 
+           "Home principal", "Cash reserves", "Income from interest", 
+           "Unrealized, capital gains", "Unrealized, car depreciation", "Unrealized, home value", 
+           "Realized, home loan", "Realized, interest", "Net worth change"),
+  "dimension"=rep("yr2023", 22),
+  "value"=c(gross_income.2023, salary.2023, dividends.2023, taxes.2023, 
+          gross_income.2023+taxes.2023, fixed_spending.2023+discretionary_spending.2023+home_improvement.2023, 
+          fixed_spending.2023, discretionary_spending.2023, home_improvement.2023, 
+          gross_income.2023+taxes.2023+fixed_spending.2023+discretionary_spending.2023+home_improvement.2023, 
+          savings.401k.2023*-1, savings.HSA.2023*-1, brokerage.2023, 
+          realized_principal.home.2023, net_cash_reserves.2023, interest.2023, 
+          unrealized_interest.stocks.2023, unrealized_interest.car.2023, 
+          unrealized_interest.home_value.2023, realized_interest.homeloan.2023,
+          realized_interest.home.2023,
+          interest.2023 + gross_income.2023 + taxes.2023 + 
+            fixed_spending.2023 + discretionary_spending.2023 + home_improvement.2023 + realized_principal.home.2023))
+
+
+income_statement.2024 <- data.frame(
+  "Header"=c("Income before taxes", "Salary", "Dividends", "Taxes", 
+           "Income after taxes", "Total expenses", "Fixed expenses", 
+           "Discretionary expenses", "Home Improvement", "Income after taxes and expenses (i.e., savings)", 
+           "Retirement contributions", "HSA contributions", "Brokerage account", 
+           "Home principal", "Cash reserves", "Income from interest", 
+           "Unrealized, capital gains", "Unrealized, car depreciation", "Unrealized, home value", 
+           "Realized, home loan", "Realized, interest", "Net worth change"),
+  "dimension"=rep("yr2024", 22),
+  "value"=c(gross_income.2024, salary.2024, dividends.2024, taxes.2024, 
+          gross_income.2024+taxes.2024, fixed_spending.2024+discretionary_spending.2024+home_improvement.2024, 
+          fixed_spending.2024, discretionary_spending.2024, home_improvement.2024, 
+          gross_income.2024+taxes.2024+fixed_spending.2024+discretionary_spending.2024+home_improvement.2024, 
+          savings.401k.2024*-1, savings.HSA.2024*-1, brokerage.2024, 
+          realized_principal.home.2024, net_cash_reserves.2024, interest.2024, 
+          unrealized_interest.stocks.2024, unrealized_interest.car.2024, 
+          unrealized_interest.home_value.2024, realized_interest.homeloan.2024,
+          realized_interest.home.2024,
+          interest.2024 + gross_income.2024 + taxes.2024 + 
+            fixed_spending.2024 + discretionary_spending.2024+ home_improvement.2024 + realized_principal.home.2024))
+
+income_statement.2025 <- data.frame(
+  "Header"=c("Income before taxes", "Salary", "Dividends", "Taxes", 
+           "Income after taxes", "Total expenses", "Fixed expenses", 
+           "Discretionary expenses", "Home Improvement", "Income after taxes and expenses (i.e., savings)", 
+           "Retirement contributions", "HSA contributions", "Brokerage account", 
+           "Home principal", "Cash reserves", "Income from interest", 
+           "Unrealized, capital gains", "Unrealized, car depreciation", "Unrealized, home value", 
+           "Realized, home loan", "Realized, interest", "Net worth change"),
+  "dimension"=rep("yr2025", 22),
+  "value"=c(gross_income.2025, salary.2025, dividends.2025, taxes.2025, 
+          gross_income.2025+taxes.2025, fixed_spending.2025+discretionary_spending.2025+home_improvement.2025, 
+          fixed_spending.2025, discretionary_spending.2025, home_improvement.2025, 
+          gross_income.2025+taxes.2025+fixed_spending.2025+discretionary_spending.2025+home_improvement.2025, 
+          savings.401k.2025*-1, savings.HSA.2025*-1, brokerage.2025, 
+          realized_principal.home.2025, net_cash_reserves.2025, interest.2025, 
+          unrealized_interest.stocks.2025, unrealized_interest.car.2025, 
+          unrealized_interest.home_value.2025, realized_interest.homeloan.2025,
+          realized_interest.home.2025,
+          interest.2025 + gross_income.2025 + taxes.2025 + 
+            fixed_spending.2025 + discretionary_spending.2025 + home_improvement.2025 + realized_principal.home.2025 + home_down_payment.2025))
+
+income_statement <- rbind(income_statement.2023,income_statement.2024)
+income_statement <- rbind(income_statement,income_statement.2025)
+
+income_statement <- income_statement %>% 
+  pivot_wider(names_from = dimension, 
+              values_from = value)
+
+income_statement[1:15,"perc2023"] <- income_statement[1:15,"yr2023"]/gross_income.2023
+income_statement[1:15,"perc2024"] <- income_statement[1:15,"yr2024"]/gross_income.2024
+income_statement[1:15,"perc2025"] <- income_statement[1:15,"yr2025"]/gross_income.2025
+
+income_statement$yr2023 <- format(round(income_statement$yr2023,0),big.mark=",")
+income_statement$yr2024 <- format(round(income_statement$yr2024,0),big.mark=",")
+income_statement$yr2025 <- format(round(income_statement$yr2025,0),big.mark=",")
+
+income_statement$perc2023 <- paste0(format(round(income_statement$perc2023*100,
+                                                 1), nsmall = 1),"%")
+income_statement$perc2024 <- paste0(format(round(income_statement$perc2024*100,
+                                                 1), nsmall = 1),"%")
+income_statement$perc2025 <- paste0(format(round(income_statement$perc2025*100,
+                                                 1), nsmall = 1),"%")
+
+income_statement$perc2023[income_statement$perc2023 == "   NA%"] <- ""
+income_statement$perc2024[income_statement$perc2024 == "   NA%"] <- ""
+income_statement$perc2025[income_statement$perc2025 == "    NA%"] <- ""
+
+income_statement <- income_statement[,c("Header","yr2023","perc2023","yr2024","perc2024","yr2025","perc2025")]
+colnames(income_statement) <- c("", "Value","%", "Value","%", "Value","%")
+income_statement %>%
+  kbl() %>%
+  kable_styling() %>%
+  add_indent(c(2,3,7,8,9,11,12,13,14,15,17,18,19,20,21)) %>%
+  row_spec(c(1,4,5,6,10,16,22),bold=T,hline_after = T) %>%
+  row_spec(c(14,20),italic=T,hline_after = T, color="#BABABA") %>%
+  add_header_above(c("","2023","","2024","","2025",""),align="l")
+```
