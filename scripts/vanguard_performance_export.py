@@ -27,22 +27,13 @@ from __future__ import annotations
 import argparse
 import getpass
 import logging
-import re
 import sys
-import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional
 
 import pandas as pd
-from playwright.sync_api import (
-    BrowserContext,
-    Error,
-    Frame,
-    Page,
-    TimeoutError,
-    sync_playwright,
-)
+from playwright.sync_api import Error, Page, TimeoutError, sync_playwright
 
 
 LOGGER = logging.getLogger(__name__)
@@ -72,7 +63,6 @@ class ScrapeConfig:
     headless: bool = False
     max_wait_ms: int = DEFAULT_WAIT_TIMEOUT
     store_html_debug: Optional[Path] = None
-    pause_on_error: bool = False
 
 
 def build_argument_parser() -> argparse.ArgumentParser:
@@ -110,14 +100,6 @@ def build_argument_parser() -> argparse.ArgumentParser:
         help="Optional path to write the final page HTML for troubleshooting.",
     )
     parser.add_argument(
-        "--pause-on-error",
-        action="store_true",
-        help=(
-            "Keep the browser open if an error occurs so you can inspect the "
-            "state before exiting."
-        ),
-    )
-    parser.add_argument(
         "--log-level",
         default="INFO",
         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
@@ -136,12 +118,9 @@ def prompt_credentials(username: Optional[str], password: Optional[str]) -> tupl
     return username, password
 
 
-def log_in(context: BrowserContext, page: Page, config: ScrapeConfig) -> Page:
+def log_in(page: Page, config: ScrapeConfig) -> None:
     LOGGER.info("Navigating to Vanguard login page")
     page.goto(LOGIN_URL, wait_until="domcontentloaded")
-
-    LOGGER.debug("Allowing login page to fully initialize before locating inputs")
-    page.wait_for_timeout(2_000)
 
     username_selectors = [
         'input[name="USER"]',
@@ -160,14 +139,8 @@ def log_in(context: BrowserContext, page: Page, config: ScrapeConfig) -> Page:
         'input[type="password"]',
     ]
 
-    login_frame = wait_for_frame_with_selectors(
-        page,
-        username_selectors,
-        config.max_wait_ms,
-    )
-
-    fill_first_available(login_frame, username_selectors, config.username)
-    fill_first_available(login_frame, password_selectors, config.password)
+    fill_first_available(page, username_selectors, config.username)
+    fill_first_available(page, password_selectors, config.password)
 
     submit_selectors = [
         'button[type="submit"]',
@@ -178,11 +151,9 @@ def log_in(context: BrowserContext, page: Page, config: ScrapeConfig) -> Page:
         'button:has-text("Sign On")',
         'input[type="submit"]',
     ]
-    existing_pages = set(context.pages)
-    click_first_available(login_frame, submit_selectors)
+    click_first_available(page, submit_selectors)
 
     LOGGER.info("Waiting for post-login navigation")
-    page = wait_for_authentication(context, page, existing_pages, config)
     page.wait_for_load_state("networkidle", timeout=config.max_wait_ms)
 
     if requires_two_factor(page):
@@ -193,8 +164,6 @@ def log_in(context: BrowserContext, page: Page, config: ScrapeConfig) -> Page:
         input("Press Enter after completing multi-factor authentication...")
         page.wait_for_load_state("networkidle", timeout=config.max_wait_ms)
 
-    return page
-
 
 def requires_two_factor(page: Page) -> bool:
     two_factor_markers = [
@@ -204,90 +173,13 @@ def requires_two_factor(page: Page) -> bool:
         "security code",
         "one-time password",
     ]
-    try:
-        body_locator = page.locator("body")
-        page_text = body_locator.inner_text(timeout=5_000).lower()
-    except Error:
-        page_text = page.content().lower()
+    page_text = page.content().lower()
     return any(marker in page_text for marker in two_factor_markers)
 
 
-def wait_for_frame_with_selectors(
-    page: Page, selectors: Iterable[str], timeout_ms: int
-) -> Frame:
-    deadline = time.monotonic() + timeout_ms / 1000
-    while time.monotonic() < deadline:
-        frames = [page.main_frame, *page.frames]
-        for frame in frames:
-            if frame is None:
-                continue
-            for selector in selectors:
-                try:
-                    locator = frame.locator(selector)
-                    if locator.count() > 0:
-                        return frame
-                except Error:
-                    continue
-        page.wait_for_timeout(250)
-    raise TimeoutError(
-        "Timed out waiting for login inputs to become available. Update selectors."
-    )
-
-
-def wait_for_authentication(
-    context: BrowserContext,
-    current_page: Page,
-    existing_pages: set[Page],
-    config: ScrapeConfig,
-) -> Page:
-    deadline = time.monotonic() + config.max_wait_ms / 1000
-    auth_pattern = re.compile(r"personal-performance", re.IGNORECASE)
-
-    def is_authenticated(target_page: Page) -> bool:
-        if auth_pattern.search(target_page.url) and "logon" not in target_page.url.lower():
-            return True
-        try:
-            text = target_page.locator("body").inner_text(timeout=2_000)
-        except Error:
-            return False
-        lowered = text.lower()
-        return "log off" in lowered or "sign out" in lowered or "performance" in lowered
-
-    while time.monotonic() < deadline:
-        for candidate in context.pages:
-            if candidate not in existing_pages and candidate.url:
-                try:
-                    candidate.wait_for_load_state(
-                        "domcontentloaded", timeout=config.max_wait_ms
-                    )
-                except TimeoutError:
-                    continue
-                if is_authenticated(candidate):
-                    return candidate
-
-        if is_authenticated(current_page):
-            return current_page
-
-        current_page.wait_for_timeout(250)
-
-    raise TimeoutError("Login did not complete before timeout. Check credentials or MFA.")
-
-
-def ensure_performance_page(page: Page, timeout_ms: int) -> None:
-    auth_pattern = re.compile(r"personal-performance", re.IGNORECASE)
-    if auth_pattern.search(page.url):
-        return
-
-    try:
-        page.wait_for_url(auth_pattern, timeout=timeout_ms)
-    except TimeoutError:
-        page.goto(LOGIN_URL, wait_until="networkidle")
-        page.wait_for_url(auth_pattern, timeout=timeout_ms)
-
-
-def fill_first_available(frame: Frame, selectors: Iterable[str], value: str) -> None:
+def fill_first_available(page: Page, selectors: Iterable[str], value: str) -> None:
     for selector in selectors:
-        locator = frame.locator(selector)
+        locator = page.locator(selector)
         if locator.count() > 0:
             LOGGER.debug("Filling selector %s", selector)
             locator.first.fill(value, timeout=5_000)
@@ -295,9 +187,9 @@ def fill_first_available(frame: Frame, selectors: Iterable[str], value: str) -> 
     raise RuntimeError(f"Unable to find an input matching selectors: {selectors}")
 
 
-def click_first_available(frame: Frame, selectors: Iterable[str]) -> None:
+def click_first_available(page: Page, selectors: Iterable[str]) -> None:
     for selector in selectors:
-        locator = frame.locator(selector)
+        locator = page.locator(selector)
         if locator.count() > 0:
             LOGGER.debug("Clicking selector %s", selector)
             locator.first.click(timeout=5_000)
@@ -307,31 +199,28 @@ def click_first_available(frame: Frame, selectors: Iterable[str]) -> None:
 
 def navigate_to_performance_details(page: Page, config: ScrapeConfig) -> None:
     LOGGER.info("Navigating to Performance Details")
-    ensure_performance_page(page, config.max_wait_ms)
-    if not re.search(r"personal-performance", page.url, re.IGNORECASE):
+    for keyword in PERFORMANCE_DETAILS_KEYWORDS:
+        try:
+            locator = page.get_by_role("link", name=keyword, exact=False)
+            if locator.count() > 0:
+                locator.first.click(timeout=5_000)
+                break
+        except (Error, TimeoutError):
+            continue
+    else:
+        # Fall back to text matching anywhere on the page.
         for keyword in PERFORMANCE_DETAILS_KEYWORDS:
             try:
-                locator = page.get_by_role("link", name=keyword, exact=False)
-                if locator.count() > 0:
-                    locator.first.click(timeout=5_000)
-                    break
+                page.locator(f"text={keyword}").first.click(timeout=5_000)
+                break
             except (Error, TimeoutError):
                 continue
         else:
-            # Fall back to text matching anywhere on the page.
-            for keyword in PERFORMANCE_DETAILS_KEYWORDS:
-                try:
-                    page.locator(f"text={keyword}").first.click(timeout=5_000)
-                    break
-                except (Error, TimeoutError):
-                    continue
-            else:
-                raise RuntimeError(
-                    "Unable to locate the Performance Details section. Update selectors."
-                )
+            raise RuntimeError(
+                "Unable to locate the Performance Details section. Update selectors."
+            )
 
-        page.wait_for_load_state("networkidle", timeout=config.max_wait_ms)
-        ensure_performance_page(page, config.max_wait_ms)
+    page.wait_for_load_state("networkidle", timeout=config.max_wait_ms)
 
     LOGGER.info("Expanding 'Show More' section if available")
     for keyword in SHOW_MORE_KEYWORDS:
@@ -383,17 +272,9 @@ def run(config: ScrapeConfig) -> None:
         page = context.new_page()
 
         try:
-            page = log_in(context, page, config)
+            log_in(page, config)
             navigate_to_performance_details(page, config)
             table = extract_tables(page, config)
-        except Exception as exc:
-            if config.pause_on_error:
-                LOGGER.error(
-                    "Encountered an error. Leaving browser open for inspection: %s",
-                    exc,
-                )
-                input("Press Enter after reviewing the browser window to exit...")
-            raise
         finally:
             context.close()
             browser.close()
@@ -423,7 +304,6 @@ def main(argv: Optional[list[str]] = None) -> int:
         headless=args.headless,
         max_wait_ms=args.max_wait_ms,
         store_html_debug=args.store_html_debug,
-        pause_on_error=args.pause_on_error,
     )
 
     try:
